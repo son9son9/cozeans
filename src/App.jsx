@@ -1,8 +1,14 @@
-import { useState } from "react";
 import "./App.css";
+import Header from "./component/header/Header";
+import Footer from "./component/footer/Footer";
 
 function App() {
-  return <></>;
+  return (
+    <>
+      <Header></Header>
+      <Footer></Footer>
+    </>
+  );
 }
 
 export default App;
