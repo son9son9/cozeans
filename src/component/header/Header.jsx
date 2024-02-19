@@ -1,6 +1,5 @@
 import "../../App.css";
 import styles from "./Header.module.scss";
-// import { ReactComponent as Cozeans } from "../../assets/cozeans.svg";
 import cozeansLogo from "../../assets/cozeans.svg";
 
 const Header = () => {

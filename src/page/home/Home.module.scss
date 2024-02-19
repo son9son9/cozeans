@@ -1,0 +1,47 @@
+.container {
+  margin: 5rem 0;
+
+  .bannerbox {
+    width: 100%;
+    .banner {
+      width: 100%;
+      min-height: 30rem;
+      background-image: url("https://sourcingjournal.com/wp-content/uploads/2023/03/lauraashleyluckybrandfeatured.jpg?w=910&h=511&crop=1");
+      background-size: cover;
+    }
+    .belt {
+      background-color: #e49d6a;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      gap: 2rem;
+
+      div {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .newin {
+    padding: 5rem;
+
+    .subtitle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      button {
+        height: fit-content;
+        color: #918984;
+        font-size: 0.7rem;
+        padding: 0.1rem;
+        border: none;
+      }
+    }
+    .cardbox {
+      display: flex;
+      gap: 2rem;
+    }
+  }
+}

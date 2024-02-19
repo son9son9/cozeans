@@ -13,11 +13,7 @@ const Footer = () => {
         </div>
         <div className={styles.contact}>
           <h3>Contact</h3>
-          <p>
-            dragonh0919@gmail.com
-            <br />
-            010-0000-0000
-          </p>
+          <p>dragonh0919@gmail.com</p>
           <img src={githubLogo} alt="Github Logo" />
         </div>
       </footer>
