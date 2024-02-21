@@ -1,16 +1,51 @@
+import { useState } from "react";
 import "../../App.css";
 import ProductCard from "../../component/productCard/ProductCard";
 import styles from "./Home.module.scss";
-// import cozeansLogo from "../../assets/cozeans.svg";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 const Home = () => {
+  const [vpWidth, setVpWidth] = useState();
+  const [offsetWidth, setOffsetWidth] = useState();
+  const [numOfElement, setNumOfElement] = useState(0);
+  const marqueeRef = useRef();
+  const [bannerText, setBannerText] = useState();
+
+  // 배너 무한 스크롤 텍스트 복제
+  useEffect(() => {
+    // 뷰포트, 전광판 텍스트 길이 구하기
+    setVpWidth(document.documentElement.clientWidth);
+    setOffsetWidth(marqueeRef.current.offsetWidth);
+
+    // 복제할 텍스트 개수 구하기
+    let count = 1;
+    let totalWidth = offsetWidth;
+
+    while (totalWidth < vpWidth + offsetWidth) {
+      totalWidth += offsetWidth;
+      count++;
+    }
+    setNumOfElement(count);
+
+    // 텍스트 복제
+    const numArray = Array.from({ length: numOfElement + 2 }, (_, i) => i + 1);
+    setBannerText(
+      numArray.map((i) => {
+        return <div key={i}>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>;
+      })
+    );
+  }, [vpWidth, offsetWidth, numOfElement]);
+
   return (
     <div className={styles.container}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}></div>
         <div className={styles.belt}>
-          <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
-          <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
+          <div className={styles.text} ref={marqueeRef}>
+            {bannerText}
+            <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
+          </div>
         </div>
       </div>
       <section className={styles.newin}>

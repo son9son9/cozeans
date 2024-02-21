@@ -15,10 +15,26 @@
       display: flex;
       align-items: center;
       font-size: 1.1rem;
-      gap: 2rem;
 
       div {
         white-space: nowrap;
+      }
+      .text {
+        display: flex;
+
+        div {
+          padding: 0 2rem;
+          animation: textLoop1 10s linear infinite;
+
+          @keyframes textLoop1 {
+            from {
+              transform: translate3d(0, 0, 0);
+            }
+            to {
+              transform: translate3d(-100%, 0, 0);
+            }
+          }
+        }
       }
     }
   }
