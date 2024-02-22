@@ -49,10 +49,14 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+
+      h2 {
+        font-size: 1.8rem;
+      }
       button {
         height: fit-content;
         color: #918984;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         padding: 0.1rem;
         border: none;
       }

@@ -8,6 +8,7 @@ import sample1 from "../../assets/sample1.png";
 import sample2 from "../../assets/sample2.png";
 import sample3 from "../../assets/sample3.png";
 import sample4 from "../../assets/sample4.png";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [vpWidth, setVpWidth] = useState();
@@ -46,7 +47,7 @@ const Home = () => {
       <div className={styles.bannerbox}>
         <div className={styles.banner}></div>
         <div className={styles.belt}>
-          <div className={styles.text} ref={marqueeRef}>
+          <div className={styles.text + " montserrat-semibold"} ref={marqueeRef}>
             {bannerText}
             <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
           </div>
@@ -55,7 +56,9 @@ const Home = () => {
       <section className={styles["pic-list"]}>
         <div className={styles.subtitle}>
           <h2 className="judson-bold">NEW IN</h2>
-          <button className="judson-regular">MORE &gt;</button>
+          <Link to="/shop">
+            <button className="judson-regular">MORE &gt;</button>
+          </Link>
         </div>
         <div className={styles.cardbox}>
           <ProductCard

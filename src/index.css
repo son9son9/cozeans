@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Judson:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 .judson-regular {
   font-family: "Judson", serif;
@@ -18,8 +19,15 @@
   font-style: italic;
 }
 
+.montserrat-semibold {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: italic;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Montserrat", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -34,11 +42,10 @@
 
 a {
   font-weight: 500;
-  /* color: #646cff; */
+  color: inherit;
   text-decoration: inherit;
 }
 a:hover {
-  /* color: #535bf2; */
 }
 
 body {

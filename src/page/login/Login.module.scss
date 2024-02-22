@@ -17,11 +17,20 @@
     }
     input {
       width: 100%;
+      padding: 0.5rem 0.2rem;
+      border: none;
+      border-bottom: 1px solid #3c3633;
+
+      //   &:focus {
+      //     transition: 0.2s;
+      //     background-color: rgba(116, 114, 100, 0.2);
+      //   }
     }
     .support-box {
       width: 100%;
       display: flex;
       justify-content: space-between;
+
       button {
         width: fit-content;
         padding: 0.1rem;
@@ -30,9 +39,12 @@
         color: #8e8681;
         font-size: 0.9rem;
         font-weight: 400;
+        transition: 0.2s;
+
         &:hover {
           border: none;
-          border-bottom: 1px solid #8e8681;
+          border-bottom: 1px solid #3c3633;
+          color: #3c3633;
         }
       }
     }
