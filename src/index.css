@@ -80,6 +80,7 @@ input {
   background-color: inherit;
   border: 1px solid #3c3633;
   border-radius: 0;
+  box-sizing: border-box;
 }
 input:focus {
   outline: none;
