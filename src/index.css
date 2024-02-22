@@ -1,3 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Judson:ital,wght@0,400;0,700;1,400&display=swap");
+
+.judson-regular {
+  font-family: "Judson", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.judson-bold {
+  font-family: "Judson", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.judson-regular-italic {
+  font-family: "Judson", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -53,6 +73,16 @@ ul {
 }
 li {
   list-style: none;
+}
+
+input {
+  padding: 0.5rem 0.5rem;
+  background-color: inherit;
+  border: 1px solid #3c3633;
+  border-radius: 0;
+}
+input:focus {
+  outline: none;
 }
 
 /* @media (prefers-color-scheme: light) {
