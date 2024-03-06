@@ -5,15 +5,15 @@ import { Link } from "react-router-dom";
 const ProductCard = (props) => {
   return (
     <div className={styles.card}>
-      <Link to="/shop">
+      <Link to="/details">
         <img src={props.src} alt="Product Image" />
       </Link>
       <div className={styles["product-textbox"]}>
         <div className={styles["product-name"]}>
-          <Link to="/shop">{props.name}</Link>
+          <Link to="/details">{props.name}</Link>
         </div>
         <div className={styles["product-price"]}>
-          <Link to="/shop">{props.price}</Link>
+          <Link to="/details">{props.price}</Link>
         </div>
       </div>
     </div>
