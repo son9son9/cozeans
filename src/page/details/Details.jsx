@@ -1,5 +1,6 @@
 import "../../App.css";
 import styles from "./Details.module.scss";
+import { Link } from "react-router-dom";
 
 const Details = () => {
   return (
@@ -67,7 +68,9 @@ const Details = () => {
         </div>
         <div className={styles["button-box"]}>
           <button>ADD TO CART</button>
-          <button>CHECKOUT</button>
+          <button>
+            <Link to="/checkout">CHECKOUT</Link>
+          </button>
         </div>
       </div>
     </div>

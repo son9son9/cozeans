@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../../App.css";
 import styles from "./Cart.module.scss";
+import { Link } from "react-router-dom";
 
 // 장바구니 상품 정보
 const itemInfo = [
@@ -70,7 +71,9 @@ const Cart = () => {
       </div>
       <div className={styles.checkout}>
         <div>SUM : {sum} KRW</div>
-        <button>CHECKOUT</button>
+        <button>
+          <Link to="/checkout">CHECKOUT</Link>
+        </button>
       </div>
     </div>
   );

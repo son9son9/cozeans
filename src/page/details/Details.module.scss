@@ -41,10 +41,14 @@
       button {
         border: 1px solid #3c3633;
         padding: 0.8rem 1.4rem;
+        width: 100%;
         &:hover {
           border: 1px solid transparent;
           background-color: #747264;
           color: #eeedeb;
+        }
+        a {
+          font-weight: 400;
         }
       }
     }
