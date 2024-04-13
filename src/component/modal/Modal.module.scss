@@ -1,0 +1,56 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+
+  .backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal {
+      background-color: #eeedeb;
+      width: fit-content;
+      height: fit-content;
+      padding: 3rem;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .btn-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 3rem;
+        height: 3rem;
+        padding: 0;
+        &:hover {
+          border: 1px solid transparent;
+        }
+      }
+      h2 {
+        margin: 0;
+        text-align: center;
+      }
+      ul {
+        margin: 0;
+        padding: 1.5rem 0;
+
+        li {
+          padding: 0.5rem 0;
+          padding-right: 0.5rem;
+        }
+      }
+      button {
+        text-align: center;
+      }
+    }
+  }
+}
