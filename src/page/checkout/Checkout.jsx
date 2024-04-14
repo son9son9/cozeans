@@ -3,6 +3,7 @@ import styles from "./Checkout.module.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
 import Modal from "../../component/modal/Modal";
+import DaumPostCode from "react-daum-postcode";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
@@ -18,7 +19,9 @@ const Checkout = () => {
   const [price, setPrice] = useState(100);
   const [discountTemp, setDiscountTemp] = useState(0);
   const [discount, setDiscount] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [addressData, setAddressData] = useState({});
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPaymentWidget = async () => {
@@ -65,23 +68,30 @@ const Checkout = () => {
         customerName: "김토스",
         customerEmail: "customer123@gmail.com",
         customerMobilePhone: "01012341234",
-        successUrl: `${window.location.origin}/success`,
-        failUrl: `${window.location.origin}/fail`,
+        successUrl: `${window.location.origin}/order-success`,
+        failUrl: `${window.location.origin}/order-fail`,
       });
     } catch (error) {
       console.error("Error requesting payment:", error);
     }
   };
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
+  const toggleAddressModal = () => {
+    setIsAddressModalOpen(!isAddressModalOpen);
+  };
+  const inputAddress = (data) => {
+    setAddressData(data);
+    console.log("입력 주소 데이터", addressData);
+  };
+  const toggleCouponModal = () => {
+    setIsCouponModalOpen(!isCouponModalOpen);
   };
   const radioCheckHandler = (e) => {
     setDiscountTemp(e.currentTarget.value);
   };
   const couponConfirmHandler = () => {
     setDiscount(discountTemp);
-    toggleModal();
+    toggleCouponModal();
   };
 
   return (
@@ -99,9 +109,9 @@ const Checkout = () => {
           <label>주소</label>
         </div>
         <div className={styles["address-box"]}>
-          <input type="text" placeholder="우편번호" readOnly />
-          <button>주소 검색</button>
-          <input type="text" className={styles["long-input"]} placeholder="기본주소" />
+          <input type="text" placeholder="우편번호" readOnly value={addressData.zonecode} />
+          <button onClick={toggleAddressModal}>주소 검색</button>
+          <input type="text" className={styles["long-input"]} placeholder="기본주소" readOnly value={addressData.address} />
           <input type="text" className={styles["long-input"]} placeholder="상세주소" />
         </div>
         <div className={styles["label-wrapper"]}>
@@ -130,7 +140,7 @@ const Checkout = () => {
         </div>
         <div className={styles["input-wrapper"]}>
           <span className={styles.price}>{discount} 원</span>
-          <button onClick={toggleModal}>쿠폰 사용</button>
+          <button onClick={toggleCouponModal}>쿠폰 사용</button>
         </div>
         <div className={styles["label-wrapper"]}>
           <label className={styles.bold}>최종 결제금액</label>
@@ -149,7 +159,7 @@ const Checkout = () => {
         결제하기
       </button>
       {/* 쿠폰 적용 모달 */}
-      <Modal toggleModal={toggleModal} isOpen={isOpen}>
+      <Modal toggleModal={toggleCouponModal} isOpen={isCouponModalOpen}>
         <h2>보유 쿠폰 현황</h2>
         <ul>
           <li>
@@ -166,6 +176,10 @@ const Checkout = () => {
           </li>
         </ul>
         <button onClick={couponConfirmHandler}>확인</button>
+      </Modal>
+      {/* 주소 입력 모달 */}
+      <Modal toggleModal={toggleAddressModal} isOpen={isAddressModalOpen}>
+        <DaumPostCode onComplete={inputAddress} onClose={toggleAddressModal} />
       </Modal>
     </div>
   );

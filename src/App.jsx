@@ -8,6 +8,7 @@ import Login from "./page/login/Login";
 import Cart from "./page/cart/Cart";
 import Details from "./page/details/Details";
 import Checkout from "./page/checkout/Checkout";
+import OrderResult from "./page/orderResult/OrderResult";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/details" element={<Details />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
+        <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
       </Routes>
       <Footer></Footer>
     </>
