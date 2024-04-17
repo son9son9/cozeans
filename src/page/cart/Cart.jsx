@@ -26,7 +26,7 @@ const Cart = () => {
   const [sum, setSum] = useState(0);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <h3 className={styles.title}>Your Cart</h3>
       <div className={styles.list}>
         {/* 아이템 리스트 배열 */}

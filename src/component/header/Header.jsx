@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <header className={styles.header}>
         <Link to="/">
           <img src={cozeansLogo} className={styles.logo} alt="Cozeans Logo" />

@@ -13,7 +13,7 @@ const Modal = (props) => {
 
   if (props.isOpen) {
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} animate-after-render`}>
         <div className={styles.backdrop} onClick={toggleModal}>
           <div className={styles.modal} onClick={modalBoxClickHandler}>
             <button className={styles["btn-close"]} onClick={toggleModal}>

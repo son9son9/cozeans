@@ -43,7 +43,7 @@ const Home = () => {
   }, [vpWidth, offsetWidth, numOfElement]);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}></div>
         <div className={styles.belt}>

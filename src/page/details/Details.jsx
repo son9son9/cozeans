@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Details = () => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <div className={styles.look}>
         <img src="/src/assets/attowidedenim21.png" alt="image1" />
         <img src="/src/assets/attowidedenim22.png" alt="image2" />

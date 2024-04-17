@@ -95,7 +95,7 @@ const Checkout = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <h1>ORDER</h1>
       <h2>Shipping Infomation</h2>
       <div className={styles["info-box"]}>

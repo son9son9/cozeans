@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Shop = () => {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} animate-after-render`}>
       <div className={styles["product-list-wrapper"]}>
         <div className={styles["sort-box"]}>
           Sort by :{" "}
