@@ -2,7 +2,45 @@ import "../../App.css";
 import styles from "./Details.module.scss";
 import { Link } from "react-router-dom";
 
-const Details = () => {
+const itemInfo = {
+  id: "1",
+  name: "Ronty Wide Denim",
+  thumbnail: "https://hififnk.kr/web/product/tiny/202401/c092e39528e850ccb42b19d1b0cf996f.jpg",
+  size: "30",
+  color: "",
+  quantity: 1,
+  price: "99,000",
+  discountedPrice: "",
+};
+
+const Details = (props) => {
+  // 장바구니 아이템 추가
+  const addToCartHandler = () => {
+    // 로컬스토리지의 카트 데이터를 가져오기
+    const currentCart = () => {
+      const cartStorage = props.cartData;
+      // 카트에 값이 있을 때만 parse
+      if (cartStorage === "" || cartStorage === null || cartStorage === undefined) {
+        return "";
+      } else return JSON.parse(cartStorage);
+    };
+
+    // 기존의 카트에 같은 아이템이 있는지 확인 alert
+    let isThereSameThing = false;
+    JSON.parse(props.cartData)?.map((item, index) => {
+      if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThing = true;
+    });
+    if (isThereSameThing) {
+      alert("동일한 상품이 이미 장바구니에 존재합니다.");
+      return false;
+    }
+
+    // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
+    let copy = [...currentCart(), itemInfo];
+    console.log(copy);
+    props.setCartData(JSON.stringify(copy));
+  };
+
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.look}>
@@ -67,7 +105,7 @@ const Details = () => {
           </select>
         </div>
         <div className={styles["button-box"]}>
-          <button>ADD TO CART</button>
+          <button onClick={addToCartHandler}>ADD TO CART</button>
           <button>
             <Link to="/checkout">CHECKOUT</Link>
           </button>

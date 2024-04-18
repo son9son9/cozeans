@@ -10,23 +10,32 @@ import Cart from "./page/cart/Cart";
 import Details from "./page/details/Details";
 import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
+import { useState } from "react";
 
 function App() {
+  const [cartData, setCartData] = useState(localStorage.getItem("my-cart"));
+
+  // state와 localStorage에 데이터 할당하는 함수 선언
+  const setCartDataHandler = (data) => {
+    setCartData(data);
+    localStorage.setItem("my-cart", data);
+  };
+
   return (
-    <Suspense fallback={<>서스펜스!!</>}>
+    <Suspense fallback={<></>}>
       <>
-        <Header></Header>
+        <Header cartData={cartData} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/details" element={<Details />} />
+          <Route path="/cart" element={<Cart cartData={cartData} />} />
+          <Route path="/details" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
           <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
         </Routes>
-        <Footer></Footer>
+        <Footer />
       </>
     </Suspense>
   );

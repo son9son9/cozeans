@@ -3,7 +3,10 @@ import styles from "./Header.module.scss";
 import cozeansLogo from "../../assets/cozeans.svg";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = (props) => {
+  // props에 cartData가 실려왔다면 아이템의 개수 반환
+  const itemQuantity = props.cartData && JSON.parse(props.cartData);
+
   return (
     <div className={`${styles.container} animate-after-render`}>
       <header className={styles.header}>
@@ -27,7 +30,7 @@ const Header = () => {
               <Link to="/login">SIGN IN</Link>
             </li>
             <li>
-              <Link to="/cart">CART</Link>
+              <Link to="/cart">CART&nbsp;&nbsp;{itemQuantity && <span className={styles["item-quantity"]}>{itemQuantity.length}</span>}</Link>
             </li>
           </ul>
         </nav>

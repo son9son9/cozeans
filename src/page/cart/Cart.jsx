@@ -3,28 +3,20 @@ import "../../App.css";
 import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
 
-// 장바구니 상품 정보
-const itemInfo = [
-  {
-    name: "Ronty Wide Denim",
-    image: "https://hififnk.kr/web/product/tiny/202401/c092e39528e850ccb42b19d1b0cf996f.jpg",
-    size: "30",
-    quantity: 1,
-    price: "99,000",
-  },
-  {
-    name: "Edit Teen Dyeing Denim",
-    image: "https://hififnk.kr/web/product/tiny/202312/9e154fc69c24191d2a169db384d875c8.jpg",
-    size: "32",
-    quantity: 1,
-    price: "79,000",
-  },
-];
-
-const Cart = () => {
-  const [items, setItems] = useState(itemInfo);
+const Cart = (props) => {
+  // 로컬스토리지 장바구니 데이터 불러오기
+  const cartStorage = localStorage.getItem("my-cart") && JSON.parse(localStorage.getItem("my-cart"));
+  const [items, setItems] = useState(cartStorage);
   const [sum, setSum] = useState(0);
 
+  // cartStorage가 비어있을 땐 비어있음 컴포넌트 반환
+  if (items === "" || items === null || items === undefined) {
+    return (
+      <div className={`${styles.container} animate-after-render`}>
+        <h2>Your cart is empty.</h2>
+      </div>
+    );
+  }
   return (
     <div className={`${styles.container} animate-after-render`}>
       <h3 className={styles.title}>Your Cart</h3>
@@ -33,7 +25,7 @@ const Cart = () => {
         {items.map((item, index) => (
           <div className={styles.item} key={index}>
             <div className={styles["img-info-wrapper"]}>
-              <img src={item.image} alt="Item Image" />
+              <img src={item.thumbnail} alt="Item Image" />
               <div className={styles["name-box"]}>
                 <div>{item.name}</div>
                 <div>SIZE : {item.size}</div>

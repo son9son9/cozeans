@@ -36,6 +36,16 @@
 
       li {
         padding: 0 0.75rem;
+
+        .item-quantity {
+          display: inline-block;
+          width: 1.3rem;
+          height: 1.3rem;
+          background-color: #3c3633;
+          color: #eeedeb;
+          border-radius: 50%;
+          position: relative;
+        }
       }
       &:nth-child(2) {
         margin-left: auto;
