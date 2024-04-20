@@ -9,7 +9,7 @@ const itemInfo = {
   size: "30",
   color: "",
   quantity: 1,
-  price: "99,000",
+  price: "99000",
   discountedPrice: "",
 };
 
@@ -27,9 +27,11 @@ const Details = (props) => {
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
     let isThereSameThing = false;
-    JSON.parse(props.cartData)?.map((item, index) => {
-      if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThing = true;
-    });
+    props.cartData &&
+      JSON.parse(props.cartData)?.map((item, index) => {
+        // stringify()로 두 객체 비교
+        if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThing = true;
+      });
     if (isThereSameThing) {
       alert("동일한 상품이 이미 장바구니에 존재합니다.");
       return false;
@@ -37,7 +39,6 @@ const Details = (props) => {
 
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
     let copy = [...currentCart(), itemInfo];
-    console.log(copy);
     props.setCartData(JSON.stringify(copy));
   };
 

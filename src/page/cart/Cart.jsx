@@ -1,13 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../App.css";
 import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
 
 const Cart = (props) => {
   // 로컬스토리지 장바구니 데이터 불러오기
-  const cartStorage = localStorage.getItem("my-cart") && JSON.parse(localStorage.getItem("my-cart"));
-  const [items, setItems] = useState(cartStorage);
+  const [items, setItems] = useState(props.cartData && JSON.parse(props.cartData));
   const [sum, setSum] = useState(0);
+
+  useEffect(() => {
+    let total = 0;
+    items &&
+      items.map((item, index) => {
+        if (item.discountedPrice) {
+          total += Number(item.discountedPrice);
+        } else if (item.price) {
+          total += Number(item.price);
+        }
+      });
+    setSum(total);
+  }, [items, sum]);
+
+  const onCloseHandler = (i) => {
+    if (confirm("장바구니에서 삭제하시겠습니까?")) {
+      const arr = items;
+      arr.splice(i, 1);
+      console.log(arr);
+      props.setCartData(arr);
+      // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
+      window.location.reload();
+    } else {
+      return false;
+    }
+  };
 
   // cartStorage가 비어있을 땐 비어있음 컴포넌트 반환
   if (items === "" || items === null || items === undefined) {
@@ -54,7 +79,7 @@ const Cart = (props) => {
             </div>
             <div className={styles["close-price-box"]}>
               <div className={styles.close}>
-                <button>✕</button>
+                <button onClick={() => onCloseHandler(index)}>✕</button>
               </div>
               <div className={styles.price}>{item.price} KRW</div>
             </div>

@@ -29,9 +29,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart cartData={cartData} />} />
+          <Route path="/cart" element={<Cart cartData={cartData} setCartData={setCartDataHandler} />} />
           <Route path="/details" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartDataHandler} />} />
           <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
           <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
         </Routes>
