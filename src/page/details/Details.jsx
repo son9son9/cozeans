@@ -1,6 +1,6 @@
 import "../../App.css";
 import styles from "./Details.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const itemInfo = {
   id: "1",
@@ -14,6 +14,9 @@ const itemInfo = {
 };
 
 const Details = (props) => {
+  let isThereSameThingOnCart = false;
+  const navigate = useNavigate();
+
   // 장바구니 아이템 추가
   const addToCartHandler = () => {
     // 로컬스토리지의 카트 데이터를 가져오기
@@ -26,13 +29,12 @@ const Details = (props) => {
     };
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
-    let isThereSameThing = false;
     props.cartData &&
       JSON.parse(props.cartData)?.map((item, index) => {
         // stringify()로 두 객체 비교
-        if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThing = true;
+        if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThingOnCart = true;
       });
-    if (isThereSameThing) {
+    if (isThereSameThingOnCart) {
       alert("동일한 상품이 이미 장바구니에 존재합니다.");
       return false;
     }
@@ -40,6 +42,12 @@ const Details = (props) => {
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
     let copy = [...currentCart(), itemInfo];
     props.setCartData(JSON.stringify(copy));
+  };
+
+  const onCheckoutHandler = () => {
+    // 현재 임시로 장바구니 추가와 같은 로직 적용
+    addToCartHandler();
+    isThereSameThingOnCart || navigate(`/checkout`);
   };
 
   return (
@@ -107,8 +115,10 @@ const Details = (props) => {
         </div>
         <div className={styles["button-box"]}>
           <button onClick={addToCartHandler}>ADD TO CART</button>
-          <button>
-            <Link to="/checkout">CHECKOUT</Link>
+          <button onClick={onCheckoutHandler}>
+            {/* <Link to="/checkout" > */}
+            CHECKOUT
+            {/* </Link> */}
           </button>
         </div>
       </div>

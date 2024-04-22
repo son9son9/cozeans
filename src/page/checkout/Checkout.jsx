@@ -1,6 +1,6 @@
 import "../../App.css";
 import styles from "./Checkout.module.scss";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
 import Modal from "../../component/modal/Modal";
 import DaumPostCode from "react-daum-postcode";
@@ -13,15 +13,30 @@ const customerKey = "ub4-rdnIUIaHFUiLi0LL1";
 
 const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
 
-const Checkout = () => {
+const Checkout = (props) => {
   const [paymentWidget, setPaymentWidget] = useState(null);
   const paymentMethodsWidgetRef = useRef(null);
-  const [price, setPrice] = useState(100);
+  const [price, setPrice] = useState(0);
+  const [originPrice, setOriginPrice] = useState(0);
   const [discountTemp, setDiscountTemp] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressData, setAddressData] = useState({});
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [items, setItems] = useState(props.cartData && JSON.parse(props.cartData));
+  const [sum, setSum] = useState(0);
+  // 배송정보 데이터
+  const [customerInput, setCustomerInput] = useState({
+    name: "",
+    addressZonecode: "",
+    address: "",
+    addressDetail: "",
+    phoneFirstNumber: "",
+    phoneMiddleNumber: "",
+    phoneLastNumber: "",
+    email: "",
+    message: "",
+  });
 
   useEffect(() => {
     const fetchPaymentWidget = async () => {
@@ -32,6 +47,20 @@ const Checkout = () => {
         console.error("Error fetching payment widget:", error);
       }
     };
+
+    // 결제 금액 구하기
+    let total = 0;
+    items &&
+      items.map((item, index) => {
+        if (item.discountedPrice) {
+          total += Number(item.discountedPrice);
+        } else if (item.price) {
+          total += Number(item.price);
+        }
+      });
+    setSum(total);
+    setPrice(total);
+    setOriginPrice(total);
 
     fetchPaymentWidget();
   }, []);
@@ -58,16 +87,21 @@ const Checkout = () => {
     paymentMethodsWidget.updateAmount(price);
   }, [price]);
 
+  // 주소 입력란의 주소를 state에 저장
+  useEffect(() => {
+    setCustomerInput({ ...customerInput, addressZonecode: addressData.zonecode, address: addressData.address });
+  }, [addressData]);
+
   const handlePaymentRequest = async () => {
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     try {
       await paymentWidget?.requestPayment({
         orderId: generateRandomString(),
-        orderName: "토스 티셔츠 외 2건",
-        customerName: "김토스",
-        customerEmail: "customer123@gmail.com",
-        customerMobilePhone: "01012341234",
+        orderName: `${items[0].name}${items.length > 1 && `외 ${items.length - 1}건`}`,
+        customerName: customerInput.name,
+        customerEmail: customerInput.email,
+        customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
         successUrl: `${window.location.origin}/order-success`,
         failUrl: `${window.location.origin}/order-fail`,
       });
@@ -81,7 +115,6 @@ const Checkout = () => {
   };
   const inputAddress = (data) => {
     setAddressData(data);
-    console.log("입력 주소 데이터", addressData);
   };
   const toggleCouponModal = () => {
     setIsCouponModalOpen(!isCouponModalOpen);
@@ -91,6 +124,11 @@ const Checkout = () => {
   };
   const couponConfirmHandler = () => {
     setDiscount(discountTemp);
+    setPrice(() => {
+      if (originPrice - discountTemp < 0) {
+        return 0;
+      } else return originPrice - discountTemp;
+    });
     toggleCouponModal();
   };
 
@@ -102,7 +140,7 @@ const Checkout = () => {
         <div className={styles["label-wrapper"]}>
           <label>받으시는 분</label>
         </div>
-        <div className={styles["input-wrapper"]}>
+        <div className={styles["input-wrapper"]} onChange={(e) => setCustomerInput({ ...customerInput, name: e.target.value })}>
           <input type="text" />
         </div>
         <div className={styles["label-wrapper"]}>
@@ -111,27 +149,49 @@ const Checkout = () => {
         <div className={styles["address-box"]}>
           <input type="text" placeholder="우편번호" readOnly value={addressData.zonecode} />
           <button onClick={toggleAddressModal}>주소 검색</button>
-          <input type="text" className={styles["long-input"]} placeholder="기본주소" readOnly value={addressData.address} />
-          <input type="text" className={styles["long-input"]} placeholder="상세주소" />
+          <input type="text" className={styles["long-input"]} placeholder="기본주소" readOnly value={addressData.address || ""} />
+          <input
+            type="text"
+            className={styles["long-input"]}
+            placeholder="상세주소"
+            onChange={(e) => setCustomerInput({ ...customerInput, addressDetail: e.target.value })}
+          />
         </div>
         <div className={styles["label-wrapper"]}>
           <label>휴대전화</label>
         </div>
         <div className={styles["input-wrapper"]}>
-          <input type="text" className={styles["phone-input"]} maxLength={3} />-
-          <input type="text" className={styles["phone-input"]} maxLength={4} />-
-          <input type="text" className={styles["phone-input"]} maxLength={4} />
+          <input
+            type="text"
+            className={styles["phone-input"]}
+            maxLength={3}
+            onChange={(e) => setCustomerInput({ ...customerInput, phoneFirstNumber: e.target.value })}
+          />
+          -
+          <input
+            type="text"
+            className={styles["phone-input"]}
+            maxLength={4}
+            onChange={(e) => setCustomerInput({ ...customerInput, phoneMiddleNumber: e.target.value })}
+          />
+          -
+          <input
+            type="text"
+            className={styles["phone-input"]}
+            maxLength={4}
+            onChange={(e) => setCustomerInput({ ...customerInput, phoneLastNumber: e.target.value })}
+          />
         </div>
         <div className={styles["label-wrapper"]}>
           <label>E-mail</label>
         </div>
         <div className={styles["input-wrapper"]}>
-          <input type="text" className={styles[""]} />
+          <input type="text" className={styles[""]} onChange={(e) => setCustomerInput({ ...customerInput, email: e.target.value })} />
         </div>
         <div className={styles["label-wrapper"]}>
           <label>배송 메시지</label>
         </div>
-        <textarea />
+        <textarea onChange={(e) => setCustomerInput({ ...customerInput, message: e.target.value })} />
       </div>
       <h2>Payment Amount</h2>
       <div className={styles["info-box"]}>
