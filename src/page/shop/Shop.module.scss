@@ -1,4 +1,5 @@
 .container {
+  // max-width: 1280px;
   min-height: calc(100vh - 5rem);
   display: flex;
   justify-content: center;
@@ -12,7 +13,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    padding: 4rem;
 
     .sort-box {
       width: 100%;
@@ -40,7 +41,7 @@
 
     // pagination
     .pagination {
-      margin-top: 3rem;
+      margin: 3rem 0;
       color: #3c363380;
       font-size: 1rem;
       a {

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 const Shop = (props) => {
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
   const [sortMode, setSortMode] = useState("new");
   const [itemList, setItemList] = useState(
     dataSample.sort((a, b) => {
@@ -16,7 +17,7 @@ const Shop = (props) => {
       // 등록날짜가 같다면 id가 뒷순서인 상품이 최신이기 때문에 id값이 큰 상품을 앞순서로 정렬
       else if (a.registrationDate == b.registrationDate) {
         if (a.id > b.id) return -1;
-        else return 1;
+        else if (a.id < b.id) return 1;
       } else if (a.registrationDate < b.registrationDate) return 1;
       else return 0;
     })
@@ -48,7 +49,7 @@ const Shop = (props) => {
   };
 
   const handleUpdate = (mode) => {
-    const array = itemList;
+    const array = [...dataSample];
 
     if (mode === "new") {
       setItemList(
@@ -58,7 +59,7 @@ const Shop = (props) => {
           // 등록날짜가 같다면 id가 뒷순서인 상품이 최신이기 때문에 id값이 큰 상품을 앞순서로 정렬
           else if (a.registrationDate == b.registrationDate) {
             if (a.id > b.id) return -1;
-            else return 1;
+            else if (a.id < b.id) return 1;
           } else if (a.registrationDate < b.registrationDate) return 1;
           else return 0;
         })
@@ -130,15 +131,13 @@ const Shop = (props) => {
               handleUpdate("name-asc");
             }}
           >
-            Name
+            Name{sortMode === "name-asc" && ` ▲`}
           </div>
         </div>
         <div className={styles["product-list"]}>
           {itemList.map((item, index) => (
             <ProductCard name={<p>{item.name}</p>} price={displayPriceHandler(item)} src={item.thumbnail} key={index} />
           ))}
-          {/* <button onClick={() => buttonClickHandler()}>BUTTON</button> */}
-          {/* {array.map((item) => item)} */}
         </div>
         <div className={styles.pagination}>
           <Link to="">&lt;</Link>
