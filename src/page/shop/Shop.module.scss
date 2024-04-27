@@ -19,9 +19,13 @@
       padding: 1rem;
       text-align: start;
 
-      a {
+      div {
+        display: inline-block;
         padding: 0.5rem;
         color: #3c363380;
+        &:hover {
+          cursor: pointer;
+        }
       }
       .emphasis {
         color: #3c3633;
@@ -36,7 +40,7 @@
 
     // pagination
     .pagination {
-      margin: 1rem;
+      margin-top: 3rem;
       color: #3c363380;
       font-size: 1rem;
       a {

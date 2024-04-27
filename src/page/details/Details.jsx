@@ -11,6 +11,7 @@ const itemInfo = {
   quantity: 1,
   price: "99000",
   discountedPrice: "",
+  registrationDate: "2024-04-23",
 };
 
 const Details = (props) => {

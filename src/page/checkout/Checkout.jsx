@@ -98,7 +98,9 @@ const Checkout = (props) => {
     try {
       await paymentWidget?.requestPayment({
         orderId: generateRandomString(),
-        orderName: `${items[0].name}${items.length > 1 && `외 ${items.length - 1}건`}`,
+        orderName: `${items[0].name}${() => {
+          if (items.length > 1) `외 ${items.length - 1}건`;
+        }}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,
         customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,

@@ -1,53 +1,144 @@
 import "../../App.css";
 import styles from "./Shop.module.scss";
 import ProductCard from "../../component/productCard/ProductCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { dataSample } from "../../dataSample";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const Shop = () => {
+const Shop = (props) => {
+  const navigate = useNavigate();
+  const [sortMode, setSortMode] = useState("new");
+  const [itemList, setItemList] = useState(
+    dataSample.sort((a, b) => {
+      // 날짜가 클수록 최신 상품이기 때문에 앞순서에 정렬
+      if (a.registrationDate > b.registrationDate) return -1;
+      // 등록날짜가 같다면 id가 뒷순서인 상품이 최신이기 때문에 id값이 큰 상품을 앞순서로 정렬
+      else if (a.registrationDate == b.registrationDate) {
+        if (a.id > b.id) return -1;
+        else return 1;
+      } else if (a.registrationDate < b.registrationDate) return 1;
+      else return 0;
+    })
+  );
+
+  const displayPriceHandler = (item) => {
+    if (item.discountedPrice) {
+      return (
+        <p>
+          <span>{item.price} KRW</span>
+          <br />
+          <span>{item.discountedPrice} KRW</span>
+        </p>
+      );
+    } else {
+      return (
+        <p>
+          <span></span>
+          <span>{item.price} KRW</span>
+        </p>
+      );
+    }
+  };
+
+  // 할인 중이면 할인가 반환, 아니면 정가 반환하는 함수
+  const decidedPrice = (item) => {
+    if (item.discountedPrice) return item.discountedPrice;
+    else return item.price;
+  };
+
+  const handleUpdate = (mode) => {
+    const array = itemList;
+
+    if (mode === "new") {
+      setItemList(
+        array.sort((a, b) => {
+          // 날짜가 클수록 최신 상품이기 때문에 앞순서에 정렬
+          if (a.registrationDate > b.registrationDate) return -1;
+          // 등록날짜가 같다면 id가 뒷순서인 상품이 최신이기 때문에 id값이 큰 상품을 앞순서로 정렬
+          else if (a.registrationDate == b.registrationDate) {
+            if (a.id > b.id) return -1;
+            else return 1;
+          } else if (a.registrationDate < b.registrationDate) return 1;
+          else return 0;
+        })
+      );
+      // 가격 내림차순 정렬
+    } else if (mode === "price-desc") {
+      setItemList(
+        array.sort((a, b) => {
+          if (decidedPrice(a) > decidedPrice(b)) {
+            return -1;
+          } else if (decidedPrice(a) < decidedPrice(b)) {
+            return 1;
+          } else return 0;
+        })
+      );
+      // 가격 오름차순 정렬
+    } else if (mode === "price-asc") {
+      setItemList(
+        array.sort((a, b) => {
+          if (decidedPrice(a) < decidedPrice(b)) {
+            return -1;
+          } else if (decidedPrice(a) > decidedPrice(b)) {
+            return 1;
+          } else return 0;
+        })
+      );
+      // 이름 오름차순 정렬
+    } else if (mode === "name-asc") {
+      setItemList(
+        array.sort((a, b) => {
+          if (a.name.toUpperCase() < b.name.toUpperCase()) {
+            return -1;
+          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+            return 1;
+          } else return 0;
+        })
+      );
+    }
+
+    setSortMode(mode);
+  };
+
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles["product-list-wrapper"]}>
         <div className={styles["sort-box"]}>
-          Sort by :{" "}
-          <Link to="" className={styles.emphasis}>
+          Sort by&nbsp;&nbsp;&nbsp;:&nbsp;
+          <div
+            className={`${sortMode === "new" ? styles.emphasis : ""}`}
+            onClick={() => {
+              handleUpdate("new");
+            }}
+          >
             New
-          </Link>
-          |<Link to="">Price</Link>|<Link to="">Rating</Link>
+          </div>
+          |
+          <div
+            className={`${sortMode === "price-desc" ? styles.emphasis : ""}`}
+            onClick={() => {
+              handleUpdate("price-desc");
+            }}
+          >
+            Price{sortMode === "price-desc" && ` ▼`}
+          </div>
+          |
+          <div
+            className={`${sortMode === "name-asc" ? styles.emphasis : ""}`}
+            onClick={() => {
+              handleUpdate("name-asc");
+            }}
+          >
+            Name
+          </div>
         </div>
         <div className={styles["product-list"]}>
-          <ProductCard
-            name={<p>Atto Wide Denim</p>}
-            price={
-              <p>
-                <span>99,000 KRW</span> <span>59,000 KRW</span>
-              </p>
-            }
-            src={"https://hififnk.kr/web/product/tiny/202401/750a66ce58f98e251fa8d5d38dafecbc.jpg"}
-          />
-          <ProductCard
-            name={<p>Zero Washed Boots-cut Denim</p>}
-            price={<p>89,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202401/2eff06824ff6d8a082988dfcba60903e.jpg"}
-          />
-          <ProductCard
-            name={<p>Ronty Wide Denim</p>}
-            price={<p>99,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202401/c092e39528e850ccb42b19d1b0cf996f.jpg"}
-          />
-          <ProductCard
-            name={<p>Edit Teen Dyeing Denim</p>}
-            price={<p>79,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202312/9e154fc69c24191d2a169db384d875c8.jpg"}
-          />
-          <ProductCard
-            name={<p>Roel Curved Denim</p>}
-            price={
-              <p>
-                <span>109,000 KRW</span> <span>69,000 KRW</span>
-              </p>
-            }
-            src={"https://hififnk.kr/web/product/tiny/202312/6f1a3abd7722a14adae262991f60e378.jpg"}
-          />
+          {itemList.map((item, index) => (
+            <ProductCard name={<p>{item.name}</p>} price={displayPriceHandler(item)} src={item.thumbnail} key={index} />
+          ))}
+          {/* <button onClick={() => buttonClickHandler()}>BUTTON</button> */}
+          {/* {array.map((item) => item)} */}
         </div>
         <div className={styles.pagination}>
           <Link to="">&lt;</Link>
