@@ -5,6 +5,10 @@
 
   img {
     width: 100%;
+    transition: 0.2s;
+    &:hover {
+      scale: 1.08;
+    }
   }
   .product-textbox {
     padding: 0.5rem;

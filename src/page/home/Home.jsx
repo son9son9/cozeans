@@ -9,13 +9,19 @@ import sample2 from "../../assets/sample2.png";
 import sample3 from "../../assets/sample3.png";
 import sample4 from "../../assets/sample4.png";
 import { Link } from "react-router-dom";
+import { dataSample } from "../../dataSample";
+import { displayPriceHandler, sortByNew } from "../../common";
 
 const Home = () => {
+  const marqueeRef = useRef();
   const [vpWidth, setVpWidth] = useState();
   const [offsetWidth, setOffsetWidth] = useState();
   const [numOfElement, setNumOfElement] = useState(0);
-  const marqueeRef = useRef();
-  const [bannerText, setBannerText] = useState();
+  const [beltText, setBeltText] = useState();
+  const [newArrivalList] = useState(() => {
+    const arr = [...dataSample];
+    return sortByNew(arr).slice(0, 5);
+  });
 
   // 배너 무한 스크롤 텍스트 복제
   useEffect(() => {
@@ -35,7 +41,7 @@ const Home = () => {
 
     // 텍스트 복제
     const numArray = Array.from({ length: numOfElement }, (_, i) => i + 1);
-    setBannerText(
+    setBeltText(
       numArray.map((i) => {
         return <div key={i}>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>;
       })
@@ -45,10 +51,18 @@ const Home = () => {
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
-        <div className={styles.banner}></div>
+        <div className={styles.banner}>
+          <div className={styles.bannertext}>
+            <h2>Brand new trends in Cozeans</h2>
+            <p>Let's check it out !</p>
+            <Link to="/shop">
+              <button>NEW ARRIVALS</button>
+            </Link>
+          </div>
+        </div>
         <div className={styles.belt}>
           <div className={styles.text + " montserrat-semibold"} ref={marqueeRef}>
-            {bannerText}
+            {beltText}
             <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
           </div>
         </div>
@@ -61,39 +75,9 @@ const Home = () => {
           </Link>
         </div>
         <div className={styles.cardbox}>
-          <ProductCard
-            name={<p>Atto Wide Denim</p>}
-            price={
-              <p>
-                <span>99,000 KRW</span> <span>59,000 KRW</span>
-              </p>
-            }
-            src={"https://hififnk.kr/web/product/tiny/202401/750a66ce58f98e251fa8d5d38dafecbc.jpg"}
-          />
-          <ProductCard
-            name={<p>Zero Washed Boots-cut Denim</p>}
-            price={<p>89,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202401/2eff06824ff6d8a082988dfcba60903e.jpg"}
-          />
-          <ProductCard
-            name={<p>Ronty Wide Denim</p>}
-            price={<p>99,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202401/c092e39528e850ccb42b19d1b0cf996f.jpg"}
-          />
-          <ProductCard
-            name={<p>Edit Teen Dyeing Denim</p>}
-            price={<p>79,000 KRW</p>}
-            src={"https://hififnk.kr/web/product/tiny/202312/9e154fc69c24191d2a169db384d875c8.jpg"}
-          />
-          <ProductCard
-            name={<p>Roel Curved Denim</p>}
-            price={
-              <p>
-                <span>109,000 KRW</span> <span>69,000 KRW</span>
-              </p>
-            }
-            src={"https://hififnk.kr/web/product/tiny/202312/6f1a3abd7722a14adae262991f60e378.jpg"}
-          />
+          {newArrivalList.map((item, index) => (
+            <ProductCard name={<p>{item.name}</p>} price={displayPriceHandler(item)} src={item.thumbnail} key={index} />
+          ))}
         </div>
       </section>
       <section className={styles["pic-list"]}>

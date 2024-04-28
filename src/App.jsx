@@ -1,6 +1,6 @@
 import "./App.css";
 import { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "./component/header/Header";
 import Footer from "./component/footer/Footer";
 import Home from "./page/home/Home";
@@ -11,15 +11,22 @@ import Details from "./page/details/Details";
 import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function App() {
+  const { pathname } = useLocation();
   const [cartData, setCartData] = useState(localStorage.getItem("my-cart"));
 
-  // state와 localStorage에 데이터 할당하는 함수 선언
+  // state와 localStorage에 데이터 할당하는 핸들러
   const setCartDataHandler = (data) => {
     setCartData(data);
     localStorage.setItem("my-cart", data);
   };
+
+  // 페이지 이동 시 스크롤 맨위로 초기화
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
 
   return (
     <Suspense fallback={<></>}>

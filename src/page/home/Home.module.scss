@@ -6,11 +6,50 @@
     width: 100%;
 
     .banner {
+      color: #eeedeb;
       width: 100%;
-      height: 40rem;
+      height: 50rem;
       min-height: 30rem;
       background-image: url("https://sourcingjournal.com/wp-content/uploads/2023/03/lauraashleyluckybrandfeatured.jpg?w=910&h=511&crop=1");
       background-size: cover;
+      transition: 0.2s;
+      // animation: bannerChanger 5s linear infinite;
+      display: flex;
+      align-items: center;
+
+      @keyframes bannerChanger {
+        from {
+          background-image: inherit;
+        }
+        to {
+          background-image: url("https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe3041c88/Jungkook/Denim%20Page%20Update%20desktop.jpg");
+        }
+      }
+      .bannertext {
+        width: fit-content;
+        text-align: start;
+        padding: 0 2rem;
+        h2 {
+          font-size: x-large;
+          margin: 0;
+        }
+        p {
+          font-size: large;
+          font-weight: 500;
+          margin: 0 0 1rem 0;
+        }
+        button {
+          font-weight: 500;
+          color: #eeedeb;
+          border: 1px solid #eeedeb;
+          padding: 1rem 2rem;
+
+          &:hover {
+            color: #3c3633;
+            background-color: #eeedeb;
+          }
+        }
+      }
     }
     .belt {
       background-color: #e49d6a;
