@@ -13,6 +13,12 @@ const Footer = () => {
             <img src={cozeansLogo} width={120} alt="Cozeans Logo" />
           </Link>
           <p>COPYRIGHT © son9son9 ALL RIGHTS RESERVED.</p>
+          <p>
+            이미지 소스 출처 :<br />
+            https://www.calvinklein.co.kr/ko/home/
+            <br />
+            https://hififnk.kr/
+          </p>
         </div>
         <div className={styles.contact}>
           <h3>Contact</h3>

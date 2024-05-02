@@ -6,7 +6,9 @@ const ProductCard = (props) => {
   return (
     <div className={styles.card}>
       <Link to="/details">
-        <img src={props.src} alt="Product Image" />
+        <div className={styles.imagebox}>
+          <img src={props.src} alt="Product Image" />
+        </div>
       </Link>
       <div className={styles["product-textbox"]}>
         <div className={styles["product-name"]}>

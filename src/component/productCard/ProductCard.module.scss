@@ -3,11 +3,14 @@
   text-align: start;
   font-size: 0.8rem;
 
-  img {
-    width: 100%;
-    transition: 0.2s;
-    &:hover {
-      scale: 1.08;
+  .imagebox {
+    overflow: hidden;
+    img {
+      width: 100%;
+      transition: 0.3s;
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
   .product-textbox {

@@ -11,6 +11,8 @@ import sample4 from "../../assets/sample4.png";
 import { Link } from "react-router-dom";
 import { dataSample } from "../../dataSample";
 import { displayPriceHandler, sortByNew } from "../../common";
+import Modal from "../../component/modal/Modal";
+import ringing from "../../assets/ringing.png";
 
 const Home = () => {
   const marqueeRef = useRef();
@@ -22,6 +24,15 @@ const Home = () => {
     const arr = [...dataSample];
     return sortByNew(arr).slice(0, 5);
   });
+  const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
+  const [newslettersEmail, setNewslettersEmail] = useState();
+
+  const toggleFollowModal = () => {
+    if (!newslettersEmail) {
+      return false;
+    }
+    setIsFollowModalOpen(!isFollowModalOpen);
+  };
 
   // 배너 무한 스크롤 텍스트 복제
   useEffect(() => {
@@ -80,6 +91,45 @@ const Home = () => {
           ))}
         </div>
       </section>
+      <section className={styles["brand-explain"]}>
+        <div>
+          <picture>
+            <source
+              srcSet="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dw386a9a9f/Jungkook/Denim Page Update desktop2.jpg"
+              media="(min-width: 768px)"
+            />
+            <source
+              srcSet="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dw386a9a9f/Jungkook/Denim Page Update desktop2.jpg"
+              media="(min-width: 1024px)"
+            />
+            <img src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dw386a9a9f/Jungkook/Denim Page Update desktop2.jpg" />
+          </picture>
+          <picture>
+            <source
+              srcSet="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe01b758f/ck_jeans-clp/Denim-Page-men-90s-jacket-jeans-CK-desktop.jpg"
+              media="(min-width: 768px)"
+            />
+            <source
+              srcSet="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe01b758f/ck_jeans-clp/Denim-Page-men-90s-jacket-jeans-CK-desktop.jpg"
+              media="(min-width: 1024px)"
+            />
+            <img src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe01b758f/ck_jeans-clp/Denim-Page-men-90s-jacket-jeans-CK-desktop.jpg" />
+          </picture>
+        </div>
+        <div className={styles["brand-explain-textbox"]}>
+          <p>
+            Cozeans denim made in a sustainable way <br />
+            with recycled cotton and low impact technology.
+          </p>
+          <p>
+            You can create any style <br />
+            while maintaining a comfortable silhouette.
+          </p>
+          <Link to="/shop">
+            <button>BUY OUR JEANS</button>
+          </Link>
+        </div>
+      </section>
       <section className={styles["pic-list"]}>
         <div className={styles.subtitle}>
           <h2 className="judson-bold">FOLLOW US</h2>
@@ -108,11 +158,21 @@ const Home = () => {
             NEW COLLECTIONS,EVENTS AND SALES.
           </div>
           <div>
-            <input type="text" placeholder="Email Address"></input>
-            <button>FOLLOW US</button>
+            <input type="text" placeholder="Email Address" onChange={(e) => setNewslettersEmail(e.currentTarget.value)}></input>
+            <button onClick={toggleFollowModal}>FOLLOW US</button>
           </div>
         </div>
       </section>
+      <Modal toggleModal={toggleFollowModal} isOpen={isFollowModalOpen}>
+        <h2>Thank you for follow us !</h2>
+        <br />
+        <h3>{newslettersEmail}&nbsp;,</h3>
+        <p>
+          We will notice our new season items <br />
+          and promotions for you soon.
+        </p>
+        <img src={ringing} />
+      </Modal>
     </div>
   );
 };
