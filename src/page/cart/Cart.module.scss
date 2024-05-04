@@ -54,6 +54,9 @@
         justify-content: space-between;
         .close {
           text-align: right;
+          button {
+            font-size: large;
+          }
         }
       }
     }
@@ -65,11 +68,11 @@
     font-size: 1rem;
 
     div:first-child {
-      color: #3c3633aa;
+      color: #3c3633;
     }
 
     button {
-      font-size: 1rem;
+      font-size: 0.9rem;
       margin: 1rem 0;
       padding: 0.8rem 1.4rem;
       color: inherit;

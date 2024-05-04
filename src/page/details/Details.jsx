@@ -1,32 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-
-const itemInfo = {
-  id: "1",
-  name: "Ronty Wide Denim",
-  thumbnail: "https://hififnk.kr/web/product/tiny/202401/c092e39528e850ccb42b19d1b0cf996f.jpg",
-  size: "30",
-  color: "",
-  quantity: 1,
-  price: "99000",
-  discountedPrice: "",
-  registrationDate: "2024-04-23",
-};
+import { displayPriceHandler } from "../../common";
+import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 
 const Details = (props) => {
-  let isThereSameThingOnCart = false;
+  let isThereSameThingInCart = false;
   const navigate = useNavigate();
   const location = useLocation();
+  const [itemInfo, setItemInfo] = useState(location.state.item);
+  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo });
 
   // 장바구니 아이템 추가
   const addToCartHandler = () => {
+    // 컬러와 사이즈 선택했는지 체크
+    if (!selectedItemInfo.color) {
+      alert("컬러를 선택해주세요.");
+      return false;
+    }
+    if (!selectedItemInfo.size) {
+      alert("사이즈를 선택해주세요.");
+      return false;
+    }
+
     // 로컬스토리지의 카트 데이터를 가져오기
     const currentCart = () => {
       const cartStorage = props.cartData;
       // 카트에 값이 있을 때만 parse
-      if (cartStorage === "" || cartStorage === null || cartStorage === undefined) {
+      if (!cartStorage) {
         return "";
       } else return JSON.parse(cartStorage);
     };
@@ -35,29 +37,39 @@ const Details = (props) => {
     props.cartData &&
       JSON.parse(props.cartData)?.map((item, index) => {
         // stringify()로 두 객체 비교
-        if (JSON.stringify(item) === JSON.stringify(itemInfo)) isThereSameThingOnCart = true;
+        if (item.id === selectedItemInfo.id && item.color === selectedItemInfo.color && item.size === selectedItemInfo.size) isThereSameThingInCart = true;
       });
-    if (isThereSameThingOnCart) {
+    if (isThereSameThingInCart) {
       alert("동일한 상품이 이미 장바구니에 존재합니다.");
       return false;
     }
 
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
-    let copy = [...currentCart(), itemInfo];
+    let copy = [...currentCart(), { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1 }];
     props.setCartData(JSON.stringify(copy));
   };
 
   const onCheckoutHandler = () => {
     // 현재 임시로 장바구니 추가와 같은 로직 적용
     addToCartHandler();
-    isThereSameThingOnCart || navigate(`/checkout`);
+    isThereSameThingInCart || navigate(`/checkout`);
+  };
+  const colorSelectHandler = (e) => {
+    setSelectedItemInfo({ ...selectedItemInfo, color: e.currentTarget.value });
+  };
+  const sizeSelectHandler = (e) => {
+    setSelectedItemInfo({ ...selectedItemInfo, size: e.currentTarget.value });
   };
 
-  useEffect(() => console.log(location.state));
+  useEffect(() => {
+    // console.log("item:", selectedItemInfo);
+  }, [selectedItemInfo]);
 
   return (
     <div className={`${styles.container} animate-after-render`}>
-      <div className={styles.look}>
+      <div className={styles.looks}>
+        <img src={itemInfo.thumbnail} alt="thumbnail" />
+        <h3>Sample images for assortment</h3>
         <img src="/src/assets/attowidedenim21.png" alt="image1" />
         <img src="/src/assets/attowidedenim22.png" alt="image2" />
         <img src="/src/assets/attowidedenim23.png" alt="image3" />
@@ -72,8 +84,10 @@ const Details = (props) => {
       </div>
       <div className={styles.explanation}>
         <div className={styles["title-box"]}>
-          <h3 className={styles.title}>Atto Wide Denim</h3>
-          <div className={styles[("price", "bold")]}>99,000 KRW</div>
+          <h3 className={styles.title}>{itemInfo.name}</h3>
+          <div className={styles[("price", "bold")]}>
+            <PriceDisplayer item={itemInfo} />
+          </div>
         </div>
         <div className={styles.content}>
           <div>
@@ -105,17 +119,25 @@ const Details = (props) => {
           </div>
         </div>
         <div className={styles["select-box"]}>
-          <select name="selectColor" id="">
-            <option>Free</option>
+          <p>Color</p>
+          <select name="selectColor" id="" onChange={colorSelectHandler}>
+            <option value="" defaultValue>
+              N/A
+            </option>
+            <option value={0}>Free</option>
           </select>
-          <select name="selectSize" id="">
-            <option>28</option>
-            <option>29</option>
-            <option>30</option>
-            <option>31</option>
-            <option>32</option>
-            <option>33</option>
-            <option>34</option>
+          <p>Size</p>
+          <select name="selectSize" id="" onChange={sizeSelectHandler}>
+            <option value="" defaultValue>
+              N/A
+            </option>
+            <option value={28}>28</option>
+            <option value={29}>29</option>
+            <option value={30}>30</option>
+            <option value={31}>31</option>
+            <option value={32}>32</option>
+            <option value={33}>33</option>
+            <option value={34}>34</option>
           </select>
         </div>
         <div className={styles["button-box"]}>

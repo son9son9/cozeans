@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../../App.css";
 import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
+import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 
 const Cart = (props) => {
   // 로컬스토리지 장바구니 데이터 불러오기
@@ -13,9 +14,9 @@ const Cart = (props) => {
     items &&
       items.map((item, index) => {
         if (item.discountedPrice) {
-          total += Number(item.discountedPrice);
+          total += Number(item.discountedPrice * item.quantity);
         } else if (item.price) {
-          total += Number(item.price);
+          total += Number(item.price * item.quantity);
         }
       });
     setSum(total);
@@ -26,7 +27,7 @@ const Cart = (props) => {
       const arr = items;
       arr.splice(i, 1);
       console.log(arr);
-      props.setCartData(arr);
+      props.setCartData(JSON.stringify(arr));
       // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
       window.location.reload();
     } else {
@@ -57,9 +58,10 @@ const Cart = (props) => {
                 <div className={styles["quantity-box"]}>
                   <button
                     onClick={() => {
-                      const copy = [...items];
-                      if (copy[index].quantity > 1) copy[index].quantity--;
-                      setItems(copy);
+                      const arr = [...items];
+                      if (arr[index].quantity > 1) arr[index].quantity--;
+                      setItems(arr);
+                      props.setCartData(JSON.stringify(arr));
                     }}
                   >
                     ﹣
@@ -67,9 +69,10 @@ const Cart = (props) => {
                   <span>{item.quantity}</span>
                   <button
                     onClick={() => {
-                      const copy = [...items];
-                      if (copy[index].quantity < 99) copy[index].quantity++;
-                      setItems(copy);
+                      const arr = [...items];
+                      if (arr[index].quantity < 99) arr[index].quantity++;
+                      setItems(arr);
+                      props.setCartData(JSON.stringify(arr));
                     }}
                   >
                     ﹢
@@ -81,7 +84,7 @@ const Cart = (props) => {
               <div className={styles.close}>
                 <button onClick={() => onCloseHandler(index)}>✕</button>
               </div>
-              <div className={styles.price}>{item.price} KRW</div>
+              <PriceDisplayer item={item} />
             </div>
           </div>
         ))}

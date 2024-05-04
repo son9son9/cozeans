@@ -53,9 +53,9 @@ const Checkout = (props) => {
     items &&
       items.map((item, index) => {
         if (item.discountedPrice) {
-          total += Number(item.discountedPrice);
+          total += Number(item.discountedPrice * item.quantity);
         } else if (item.price) {
-          total += Number(item.price);
+          total += Number(item.price * item.quantity);
         }
       });
     setSum(total);
@@ -99,7 +99,7 @@ const Checkout = (props) => {
       await paymentWidget?.requestPayment({
         orderId: generateRandomString(),
         orderName: `${items[0].name}${() => {
-          if (items.length > 1) `외 ${items.length - 1}건`;
+          if (items.length > 1) ` 외 ${items.length - 1}건`;
         }}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,

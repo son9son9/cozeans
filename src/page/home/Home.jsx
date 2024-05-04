@@ -87,7 +87,7 @@ const Home = () => {
         </div>
         <div className={styles.cardbox}>
           {newArrivalList.map((item, index) => (
-            <ProductCard name={<p>{item.name}</p>} price={displayPriceHandler(item)} src={item.thumbnail} key={index} />
+            <ProductCard data={item} key={index} />
           ))}
         </div>
       </section>
