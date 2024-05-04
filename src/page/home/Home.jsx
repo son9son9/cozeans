@@ -125,9 +125,9 @@ const Home = () => {
             You can create any style <br />
             while maintaining a comfortable silhouette.
           </p>
-          <Link to="/shop">
-            <button>BUY OUR JEANS</button>
-          </Link>
+          <button>
+            <Link to="/shop">BUY OUR JEANS</Link>
+          </button>
         </div>
       </section>
       <section className={styles["pic-list"]}>

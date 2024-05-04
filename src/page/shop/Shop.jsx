@@ -1,19 +1,31 @@
 import "../../App.css";
 import styles from "./Shop.module.scss";
 import ProductCard from "../../component/productCard/ProductCard";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { dataSample } from "../../dataSample";
 import { useState } from "react";
-import { displayPriceHandler, sortByNew } from "../../common";
+import { sortByNew } from "../../common";
+import { useEffect } from "react";
+
+// chunkUnit만큼 itemList를 잘라 chunkedList에 저장
+const sliceList = (list, chunkUnit) => {
+  let arr = [];
+  for (let i = 0; i < list.length; i += chunkUnit) {
+    arr.push(list.slice(i, i + chunkUnit));
+  }
+  return arr;
+};
 
 const Shop = (props) => {
-  // const navigate = useNavigate();
-  // const [currentPage, setCurrentPage] = useState(1);
+  const { page } = useParams();
+  const [currentPage, setCurrentPage] = useState(Number(page));
   const [sortMode, setSortMode] = useState("new");
   const [itemList, setItemList] = useState(() => {
     const arr = [...dataSample];
     return sortByNew(arr);
   });
+  const [chunkUnit] = useState(8); // 리스트 목록 개수 단위 설정
+  const [chunkedList, setChunkedList] = useState(sliceList(itemList, chunkUnit));
 
   // 할인 중이면 할인가 반환, 아니면 정가 반환하는 함수
   const decidedPrice = (item) => {
@@ -62,7 +74,10 @@ const Shop = (props) => {
     }
 
     setSortMode(mode);
+    setChunkedList(sliceList(arr, chunkUnit));
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className={`${styles.container} animate-after-render`}>
@@ -97,20 +112,33 @@ const Shop = (props) => {
           </div>
         </div>
         <div className={styles["product-list"]}>
-          {itemList.map((item, index) => (
-            <ProductCard name={<p>{item.name}</p>} price={displayPriceHandler(item)} src={item.thumbnail} key={index} />
+          {chunkedList[currentPage - 1].map((item, index) => (
+            <ProductCard data={item} key={index} />
           ))}
         </div>
         <div className={styles.pagination}>
-          <Link to="">&lt;</Link>
-          <Link to="" className={styles.emphasis}>
-            1
+          <Link
+            to={currentPage === 1 ? `/shop/1` : `/shop/${(currentPage - 1).toString()}`}
+            onClick={() => (currentPage === 1 ? false : setCurrentPage(currentPage - 1))}
+          >
+            &lt;
           </Link>
-          <Link to="">2</Link>
-          <Link to="">3</Link>
-          <Link to="">4</Link>
-          <Link to="">5</Link>
-          <Link to="">&gt;</Link>
+          {chunkedList.map((element, index) => (
+            <Link
+              to={`/shop/${(index + 1).toString()}`}
+              className={currentPage === index + 1 ? styles.emphasis : ""}
+              onClick={() => setCurrentPage(index + 1)}
+              key={index}
+            >
+              {index + 1}
+            </Link>
+          ))}
+          <Link
+            to={currentPage === chunkedList.length ? `/shop/${chunkedList.length}` : `/shop/${(currentPage + 1).toString()}`}
+            onClick={() => (currentPage === chunkedList.length ? false : setCurrentPage(currentPage + 1))}
+          >
+            &gt;
+          </Link>
         </div>
       </div>
     </div>

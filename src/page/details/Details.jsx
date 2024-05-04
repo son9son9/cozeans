@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const itemInfo = {
   id: "1",
@@ -17,6 +18,7 @@ const itemInfo = {
 const Details = (props) => {
   let isThereSameThingOnCart = false;
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 장바구니 아이템 추가
   const addToCartHandler = () => {
@@ -50,6 +52,8 @@ const Details = (props) => {
     addToCartHandler();
     isThereSameThingOnCart || navigate(`/checkout`);
   };
+
+  useEffect(() => console.log(location.state));
 
   return (
     <div className={`${styles.container} animate-after-render`}>

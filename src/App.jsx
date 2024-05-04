@@ -1,6 +1,6 @@
 import "./App.css";
 import { Suspense } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Header from "./component/header/Header";
 import Footer from "./component/footer/Footer";
 import Home from "./page/home/Home";
@@ -30,20 +30,19 @@ function App() {
 
   return (
     <Suspense fallback={<></>}>
-      <>
-        <Header cartData={cartData} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart cartData={cartData} setCartData={setCartDataHandler} />} />
-          <Route path="/details" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
-          <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartDataHandler} />} />
-          <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
-          <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
-        </Routes>
-        <Footer />
-      </>
+      <Header cartData={cartData} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop/" element={<Navigate replace to="/shop/1" />} />
+        <Route path="/shop/:page" element={<Shop />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart cartData={cartData} setCartData={setCartDataHandler} />} />
+        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
+        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartDataHandler} />} />
+        <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
+        <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
+      </Routes>
+      <Footer />
     </Suspense>
   );
 }
