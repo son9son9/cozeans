@@ -17,11 +17,18 @@ import SignUp from "./page/signUp/SignUp";
 function App() {
   const { pathname } = useLocation();
   const [cartData, setCartData] = useState(localStorage.getItem("my-cart"));
+  const [loginSession, setLoginSession] = useState(sessionStorage.getItem("cozeans-login-session"));
 
-  // state와 localStorage에 데이터 할당하는 핸들러
-  const setCartDataHandler = (data) => {
+  // state와 localStorage에 장바구니 데이터 업데이트
+  const updateCartDataHandler = (data) => {
     setCartData(data);
     localStorage.setItem("my-cart", data);
+  };
+
+  // sessionStorage에 로그인 세션 정보 업데이트
+  const updateLoginHandler = (data) => {
+    setLoginSession(data);
+    sessionStorage.setItem("cozeans-login-session", data);
   };
 
   // 페이지 이동 시 스크롤 맨위로 초기화
@@ -31,17 +38,17 @@ function App() {
 
   return (
     <Suspense fallback={<></>}>
-      <Header cartData={cartData} />
+      <Header loginSession={loginSession} setLoginSession={updateLoginHandler} cartData={cartData} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop/" element={<Navigate replace to="/shop/1" />} />
         <Route path="/shop/:page" element={<Shop />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login loginSession={loginSession} setLoginSession={updateLoginHandler} />} />
         <Route path="/sign-up" element={<SignUp />} />
         {/* <Route path="/find-account" element={<FindAccount />} /> */}
-        <Route path="/cart" element={<Cart cartData={cartData} setCartData={setCartDataHandler} />} />
-        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
-        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartDataHandler} />} />
+        <Route path="/cart" element={<Cart cartData={cartData} setCartData={updateCartDataHandler} />} />
+        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={updateCartDataHandler} />} />
+        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} />} />
         <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
         <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
       </Routes>

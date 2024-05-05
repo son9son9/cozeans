@@ -1,15 +1,47 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../App.css";
 import styles from "./Login.module.scss";
+import { useState, useEffect } from "react";
 
-const Login = () => {
+const Login = (props) => {
+  const navigate = useNavigate();
+  const [idInput, setIdInput] = useState("");
+  const [pwInput, setPwInput] = useState("");
+
+  const loginHandler = () => {
+    let accounts = localStorage.getItem("cozeans-accounts");
+    accounts && (accounts = JSON.parse(accounts));
+
+    // DB에 로그인하려는 계정 정보가 있는지 검사
+    for (let i = 0; i < accounts.length; i++) {
+      if (accounts[i].id === idInput && accounts[i].password === pwInput) {
+        // 일치하는 계정 있을 시 session 업데이트하고 로그인 로직 실행
+        props.setLoginSession(JSON.stringify({ id: idInput, name: accounts[i].name }));
+        navigate("/");
+        return;
+      } else {
+        alert("로그인 정보가 틀립니다. 다시 확인해주세요.");
+      }
+    }
+  };
+
+  // 로그인 중이라면 alert 후 메인페이지로 돌아가기
+  useEffect(() => {
+    if (props.loginSession) {
+      alert("이미 로그인 되어있습니다.");
+      navigate("/");
+    }
+  }, []);
+
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles["login-box"]}>
         <h2>SIGN IN</h2>
-        <input type="text" placeholder="ID"></input>
-        <input type="password" placeholder="PASSWORD"></input>
-        <button className={styles.signin}>SIGN IN</button>
+        <input type="text" onChange={(e) => setIdInput(e.currentTarget.value)} placeholder="ID"></input>
+        <input type="password" onChange={(e) => setPwInput(e.currentTarget.value)} placeholder="PASSWORD"></input>
+        <button className={styles.signin} onClick={loginHandler}>
+          SIGN IN
+        </button>
         <div className={styles["support-box"]}>
           <button>
             <Link to="/find-account">forgot password?</Link>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./SignUp.module.scss";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../component/modal/Modal";
 
