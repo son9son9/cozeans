@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import PriceDisplayer from "../priceDisplayer/PriceDisplayer";
 
 const ProductCard = (props) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className={styles.card}>

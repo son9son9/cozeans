@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <div className={`${styles.container} animate-after-render`}>
-      <footer className={styles.footer}>
+      <footer>
         <div className={styles.logo}>
           <Link to="/">
             <img src={cozeansLogo} width={120} alt="Cozeans Logo" />

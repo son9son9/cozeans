@@ -4,7 +4,7 @@
   background-color: #e7ddd5;
   display: flex;
 
-  .footer {
+  footer {
     width: 100%;
     display: flex;
     align-items: center;
@@ -21,11 +21,15 @@
         color: #918984;
         position: relative;
         top: 1rem;
+        margin: 0.5rem 0;
       }
     }
     .contact {
       h3 {
         margin: 0;
+      }
+      p {
+        margin: 0.5rem 0;
       }
     }
   }

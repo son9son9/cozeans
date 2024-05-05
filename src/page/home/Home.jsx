@@ -10,7 +10,7 @@ import sample3 from "../../assets/sample3.png";
 import sample4 from "../../assets/sample4.png";
 import { Link } from "react-router-dom";
 import { dataSample } from "../../dataSample";
-import { displayPriceHandler, sortByNew } from "../../common";
+import { sortByNew } from "../../common";
 import Modal from "../../component/modal/Modal";
 import ringing from "../../assets/ringing.png";
 
@@ -19,6 +19,7 @@ const Home = () => {
   const [vpWidth, setVpWidth] = useState();
   const [offsetWidth, setOffsetWidth] = useState();
   const [numOfElement, setNumOfElement] = useState(0);
+  const [circulateBannerFlag, setCirculateBannerFlag] = useState(1);
   const [beltText, setBeltText] = useState();
   const [newArrivalList] = useState(() => {
     const arr = [...dataSample];
@@ -59,16 +60,33 @@ const Home = () => {
     );
   }, [vpWidth, offsetWidth, numOfElement]);
 
+  // 10초마다 배너 전광판 이미지 교체
+  useEffect(() => {
+    setTimeout(() => {
+      setCirculateBannerFlag(circulateBannerFlag === 1 ? 2 : 1);
+    }, 10000);
+  }, [circulateBannerFlag]);
+
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}>
-          <div className={styles.bannertext}>
-            <h2>Brand new trends in Cozeans</h2>
-            <p>Let's check it out !</p>
-            <Link to="/shop">
-              <button>NEW ARRIVALS</button>
-            </Link>
+          <div className={styles["banner-img-wrapper"]}>
+            <img
+              src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe3041c88/Jungkook/Denim%20Page%20Update%20desktop.jpg"
+              className={circulateBannerFlag === 1 ? styles.hype : ""}
+            />
+            <img
+              src="https://sourcingjournal.com/wp-content/uploads/2023/03/lauraashleyluckybrandfeatured.jpg?w=910&h=511&crop=1"
+              className={circulateBannerFlag === 2 ? styles.hype : ""}
+            />
+            <div className={styles.bannertext}>
+              <h2>Brand new trends in Cozeans</h2>
+              <p>Let's check it out !</p>
+              <Link to="/shop">
+                <button>NEW ARRIVALS</button>
+              </Link>
+            </div>
           </div>
         </div>
         <div className={styles.belt}>
