@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 
 const Cart = (props) => {
+  const loginSession = props.loginSession && JSON.parse(props.loginSession);
   // 로컬스토리지 장바구니 데이터 불러오기
-  const [items, setItems] = useState(props.cartData && JSON.parse(props.cartData));
+  const [items, setItems] = useState(
+    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession.id || Boolean(item.user) === Boolean(loginSession.id))
+  );
   const [sum, setSum] = useState(0);
 
   useEffect(() => {
@@ -26,7 +29,6 @@ const Cart = (props) => {
     if (confirm("장바구니에서 삭제하시겠습니까?")) {
       const arr = items;
       arr.splice(i, 1);
-      console.log(arr);
       props.setCartData(JSON.stringify(arr));
       // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
       window.location.reload();

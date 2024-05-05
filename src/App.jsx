@@ -16,13 +16,13 @@ import SignUp from "./page/signUp/SignUp";
 
 function App() {
   const { pathname } = useLocation();
-  const [cartData, setCartData] = useState(localStorage.getItem("my-cart"));
+  const [cartData, setCartData] = useState(localStorage.getItem("cozeans-my-cart"));
   const [loginSession, setLoginSession] = useState(sessionStorage.getItem("cozeans-login-session"));
 
   // state와 localStorage에 장바구니 데이터 업데이트
   const updateCartDataHandler = (data) => {
     setCartData(data);
-    localStorage.setItem("my-cart", data);
+    localStorage.setItem("cozeans-my-cart", data);
   };
 
   // sessionStorage에 로그인 세션 정보 업데이트
@@ -46,9 +46,9 @@ function App() {
         <Route path="/login" element={<Login loginSession={loginSession} setLoginSession={updateLoginHandler} />} />
         <Route path="/sign-up" element={<SignUp />} />
         {/* <Route path="/find-account" element={<FindAccount />} /> */}
-        <Route path="/cart" element={<Cart cartData={cartData} setCartData={updateCartDataHandler} />} />
-        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={updateCartDataHandler} />} />
-        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} />} />
+        <Route path="/cart" element={<Cart cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
+        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
+        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
         <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
         <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
       </Routes>

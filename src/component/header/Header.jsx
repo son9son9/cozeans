@@ -2,13 +2,14 @@ import "../../App.css";
 import styles from "./Header.module.scss";
 import cozeansLogo from "../../assets/cozeans.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 const Header = (props) => {
   const navigate = useNavigate();
-  // props에 cartData가 실려왔다면 아이템의 개수 반환
-  const itemQuantity = props.cartData && JSON.parse(props.cartData);
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
+  // 현재 세션 id와 일치하는 user의 장바구니 필터링 또는
+  // 현제 세션 id와 user의 장바구니가 falsy 값을 때, 즉 비로그인(게스트)일 때 필터링
+  const myCartArray =
+    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession.id || Boolean(item.user) === Boolean(loginSession.id));
 
   const logoutClickHandler = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
@@ -47,7 +48,7 @@ const Header = (props) => {
               </li>
             )}
             <li>
-              <Link to="/cart">CART&nbsp;&nbsp;{itemQuantity && <span className={styles["item-quantity"]}>{itemQuantity.length}</span>}</Link>
+              <Link to="/cart">CART&nbsp;&nbsp;{myCartArray && <span className={styles["item-quantity"]}>{myCartArray.length}</span>}</Link>
             </li>
           </ul>
         </nav>

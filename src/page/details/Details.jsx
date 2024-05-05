@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,10 +6,11 @@ import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 
 const Details = (props) => {
   let isThereSameThingInCart = false;
+  const loginSession = props.loginSession && JSON.parse(props.loginSession);
   const navigate = useNavigate();
   const location = useLocation();
-  const [itemInfo, setItemInfo] = useState(location.state.item);
-  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo });
+  const [itemInfo] = useState(location.state.item);
+  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession.id || "" });
 
   // 장바구니 아이템 추가
   const addToCartHandler = () => {
@@ -36,7 +37,13 @@ const Details = (props) => {
     props.cartData &&
       JSON.parse(props.cartData)?.map((item, index) => {
         // stringify()로 두 객체 비교
-        if (item.id === selectedItemInfo.id && item.color === selectedItemInfo.color && item.size === selectedItemInfo.size) isThereSameThingInCart = true;
+        if (
+          item.id === selectedItemInfo.id &&
+          item.color === selectedItemInfo.color &&
+          item.size === selectedItemInfo.size &&
+          item.user === selectedItemInfo.user
+        )
+          isThereSameThingInCart = true;
       });
     if (isThereSameThingInCart) {
       alert("동일한 상품이 이미 장바구니에 존재합니다.");
@@ -44,7 +51,12 @@ const Details = (props) => {
     }
 
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
-    let copy = [...currentCart(), { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1 }];
+    // quantity 한개 추가
+    // user 키 추가
+    let copy = [
+      ...currentCart(),
+      { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1, user: loginSession.id || "" },
+    ];
     props.setCartData(JSON.stringify(copy));
   };
 
@@ -59,10 +71,6 @@ const Details = (props) => {
   const sizeSelectHandler = (e) => {
     setSelectedItemInfo({ ...selectedItemInfo, size: e.currentTarget.value });
   };
-
-  useEffect(() => {
-    // console.log("item:", selectedItemInfo);
-  }, [selectedItemInfo]);
 
   return (
     <div className={`${styles.container} animate-after-render`}>
