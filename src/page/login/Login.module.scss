@@ -39,11 +39,13 @@
         font-size: 0.9rem;
         font-weight: 400;
         transition: 0.2s;
-
         &:hover {
           border: none;
           border-bottom: 1px solid #3c3633;
           color: #3c3633;
+        }
+        a {
+          color: inherit;
         }
       }
     }

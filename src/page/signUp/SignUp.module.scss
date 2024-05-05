@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  .content {
+    width: 18rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    h3 {
+      width: 100%;
+      margin: 0;
+      text-align: start;
+    }
+    label {
+      width: 100%;
+      text-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.2s;
+
+      input {
+        width: 12rem;
+      }
+      .empty-warning {
+        border: 1px solid #ff0000aa;
+        background-color: #ff000015;
+      }
+    }
+    .signup {
+      margin: 1rem;
+      padding: 1rem;
+      border: 1px solid #3c3633;
+      width: 100%;
+      &:hover {
+        color: #eeedeb;
+        background-color: #747264;
+        border: 1px solid #747264;
+      }
+    }
+  }
+}

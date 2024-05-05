@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { displayPriceHandler } from "../../common";
+import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 
 const Details = (props) => {

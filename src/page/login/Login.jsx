@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../../App.css";
 import styles from "./Login.module.scss";
 
@@ -10,8 +11,12 @@ const Login = () => {
         <input type="password" placeholder="PASSWORD"></input>
         <button className={styles.signin}>SIGN IN</button>
         <div className={styles["support-box"]}>
-          <button>forgot password?</button>
-          <button>sign up</button>
+          <button>
+            <Link to="/find-account">forgot password?</Link>
+          </button>
+          <button>
+            <Link to="/sign-up">sign up</Link>
+          </button>
         </div>
       </div>
     </div>

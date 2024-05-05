@@ -24,17 +24,6 @@
       flex-direction: column;
       align-items: center;
 
-      .btn-close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 3rem;
-        height: 3rem;
-        padding: 0;
-        &:hover {
-          border: 1px solid transparent;
-        }
-      }
       h2 {
         margin: 0;
         text-align: center;
@@ -56,10 +45,23 @@
       }
       button {
         text-align: center;
+        padding: 1rem;
       }
       img {
         width: 5rem;
         padding: 2rem;
+      }
+      .btn-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 3rem;
+        height: 3rem;
+        padding: 0;
+        border: 1px solid transparent;
+        &:hover {
+          border: 1px solid transparent;
+        }
       }
     }
   }

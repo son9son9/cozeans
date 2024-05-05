@@ -12,6 +12,7 @@ import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
 import { useState } from "react";
 import { useEffect } from "react";
+import SignUp from "./page/signUp/SignUp";
 
 function App() {
   const { pathname } = useLocation();
@@ -36,6 +37,8 @@ function App() {
         <Route path="/shop/" element={<Navigate replace to="/shop/1" />} />
         <Route path="/shop/:page" element={<Shop />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        {/* <Route path="/find-account" element={<FindAccount />} /> */}
         <Route path="/cart" element={<Cart cartData={cartData} setCartData={setCartDataHandler} />} />
         <Route path="/details/:id" element={<Details cartData={cartData} setCartData={setCartDataHandler} />} />
         <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartDataHandler} />} />
