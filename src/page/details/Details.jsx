@@ -78,17 +78,17 @@ const Details = (props) => {
       <div className={styles.looks}>
         <img src={itemInfo.thumbnail} alt="thumbnail" />
         <h3>Sample images for assortment</h3>
-        <img src="/src/assets/attowidedenim21.png" alt="image1" />
-        <img src="/src/assets/attowidedenim22.png" alt="image2" />
-        <img src="/src/assets/attowidedenim23.png" alt="image3" />
-        <img src="/src/assets/attowidedenim24.png" alt="image4" />
-        <img src="/src/assets/attowidedenim25.png" alt="image5" />
-        <img src="/src/assets/attowidedenim26.png" alt="image6" />
-        <img src="/src/assets/attowidedenim27.png" alt="image7" />
-        <img src="/src/assets/attowidedenim28.png" alt="image8" />
-        <img src="/src/assets/attowidedenim29.png" alt="image9" />
-        <img src="/src/assets/attowidedenim30.png" alt="image10" />
-        <img src="/src/assets/attowidedenim31.png" alt="image11" />
+        <img src={`${rootPath}src/assets/attowidedenim21.png`} alt="image1" />
+        <img src={`${rootPath}src/assets/attowidedenim22.png`} alt="image2" />
+        <img src={`${rootPath}src/assets/attowidedenim23.png`} alt="image3" />
+        <img src={`${rootPath}src/assets/attowidedenim24.png`} alt="image4" />
+        <img src={`${rootPath}src/assets/attowidedenim25.png`} alt="image5" />
+        <img src={`${rootPath}src/assets/attowidedenim26.png`} alt="image6" />
+        <img src={`${rootPath}src/assets/attowidedenim27.png`} alt="image7" />
+        <img src={`${rootPath}src/assets/attowidedenim28.png`} alt="image8" />
+        <img src={`${rootPath}src/assets/attowidedenim29.png`} alt="image9" />
+        <img src={`${rootPath}src/assets/attowidedenim30.png`} alt="image10" />
+        <img src={`${rootPath}src/assets/attowidedenim31.png`} alt="image11" />
       </div>
       <div className={styles.explanation}>
         <div className={styles["title-box"]}>

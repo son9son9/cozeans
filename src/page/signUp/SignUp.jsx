@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../component/modal/Modal";
+import { rootPath } from "../../config";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const SignUp = () => {
   };
 
   const completeModalButtonHandler = () => {
-    navigate("/login");
+    navigate(`${rootPath}login`);
   };
 
   return (

@@ -16,7 +16,7 @@ const Header = (props) => {
     if (confirm("로그아웃 하시겠습니까?")) {
       props.setLoginSession("");
       alert("로그아웃 되었습니다.");
-      // navigate("/");
+      // navigate(`${rootPath}`);
       window.location.reload();
     }
   };
