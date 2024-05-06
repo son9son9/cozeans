@@ -64,14 +64,19 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setCirculateBannerFlag(circulateBannerFlag === 1 ? 2 : 1);
-    }, 10000);
+    }, 5000);
   }, [circulateBannerFlag]);
 
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}>
-          <div className={styles["banner-img-wrapper"]}>
+          <div
+            className={styles["banner-img-wrapper"]}
+            // onClick={() => {
+            //   setCirculateBannerFlag(circulateBannerFlag === 1 ? 2 : 1);
+            // }}
+          >
             <img
               src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe3041c88/Jungkook/Denim%20Page%20Update%20desktop.jpg"
               className={circulateBannerFlag === 1 ? styles.hype : ""}

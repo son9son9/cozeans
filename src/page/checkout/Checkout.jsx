@@ -5,10 +5,11 @@ import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
 import Modal from "../../component/modal/Modal";
 import DaumPostCode from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
+import { formatNumberToCurrency } from "../../common";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
-const widgetClientKey = "test_ck_DpexMgkW36GDoPpWy9G4VGbR5ozO";
+const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 const customerKey = "ub4-rdnIUIaHFUiLi0LL1";
 // const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
@@ -26,7 +27,7 @@ const Checkout = (props) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressData, setAddressData] = useState({});
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [items, setItems] = useState(props.cartData && JSON.parse(props.cartData));
+  const [items] = useState(props.cartData && JSON.parse(props.cartData));
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
   const [customerInput, setCustomerInput] = useState({
@@ -109,9 +110,7 @@ const Checkout = (props) => {
     try {
       await paymentWidget?.requestPayment({
         orderId: generateRandomString(),
-        orderName: `${items[0].name}${() => {
-          if (items.length > 1) ` 외 ${items.length - 1}건`;
-        }}`,
+        orderName: `${items[0].name}${items.length > 1 && ` 외 ${items.length - 1}건`}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,
         customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
@@ -219,7 +218,7 @@ const Checkout = (props) => {
           <label className={styles.bold}>최종 결제금액</label>
         </div>
         <div className={styles["input-wrapper"]}>
-          <span className={`${styles.price} ${styles.bold}`}>{price} 원</span>
+          <span className={`${styles.price} ${styles.bold}`}>{formatNumberToCurrency(price)} 원</span>
         </div>
       </div>
       {/* 결제 UI, 이용약관 UI 영역 */}

@@ -31,3 +31,12 @@ export const displayPriceHandler = (item) => {
     );
   }
 };
+
+// 정수 또는 문자열을 가격표 형식의 문자열로 변환 후 반환
+export function formatNumberToCurrency(number) {
+  if (typeof number === "number") {
+    return number.toLocaleString();
+  } else if (typeof number === "string") {
+    return Number(number).toLocaleString();
+  }
+}

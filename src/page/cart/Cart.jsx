@@ -3,6 +3,7 @@ import "../../App.css";
 import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
+import { formatNumberToCurrency } from "../../common";
 
 const Cart = (props) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
@@ -11,6 +12,18 @@ const Cart = (props) => {
     props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession.id || Boolean(item.user) === Boolean(loginSession.id))
   );
   const [sum, setSum] = useState(0);
+
+  const onCloseHandler = (i) => {
+    if (confirm("장바구니에서 삭제하시겠습니까?")) {
+      const arr = items;
+      arr.splice(i, 1);
+      props.setCartData(JSON.stringify(arr));
+      // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
+      window.location.reload();
+    } else {
+      return false;
+    }
+  };
 
   useEffect(() => {
     let total = 0;
@@ -25,20 +38,8 @@ const Cart = (props) => {
     setSum(total);
   }, [items, sum]);
 
-  const onCloseHandler = (i) => {
-    if (confirm("장바구니에서 삭제하시겠습니까?")) {
-      const arr = items;
-      arr.splice(i, 1);
-      props.setCartData(JSON.stringify(arr));
-      // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
-      window.location.reload();
-    } else {
-      return false;
-    }
-  };
-
   // cartStorage가 비어있을 땐 비어있음 컴포넌트 반환
-  if (items === "" || items === null || items === undefined) {
+  if (!items || items.length === 0) {
     return (
       <div className={`${styles.container} animate-after-render`}>
         <h2>Your cart is empty.</h2>
@@ -92,7 +93,7 @@ const Cart = (props) => {
         ))}
       </div>
       <div className={styles.checkout}>
-        <div>SUM : {sum} KRW</div>
+        <div>SUM : {formatNumberToCurrency(sum)} KRW</div>
         <button>
           <Link to="/checkout">CHECKOUT</Link>
         </button>

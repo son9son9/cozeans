@@ -20,8 +20,14 @@ const Login = (props) => {
         navigate("/");
         return;
       } else {
-        alert("로그인 정보가 틀립니다. 다시 확인해주세요.");
+        alert("로그인 정보가 일치하지 않습니다. 다시 입력해주세요.");
       }
+    }
+  };
+
+  const keyPressHandler = (e) => {
+    if (e.keyCode === 13) {
+      loginHandler();
     }
   };
 
@@ -37,15 +43,13 @@ const Login = (props) => {
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles["login-box"]}>
         <h2>SIGN IN</h2>
-        <input type="text" onChange={(e) => setIdInput(e.currentTarget.value)} placeholder="ID"></input>
-        <input type="password" onChange={(e) => setPwInput(e.currentTarget.value)} placeholder="PASSWORD"></input>
+        <input type="text" onChange={(e) => setIdInput(e.currentTarget.value)} onKeyDown={keyPressHandler} placeholder="ID"></input>
+        <input type="password" onChange={(e) => setPwInput(e.currentTarget.value)} onKeyDown={keyPressHandler} placeholder="PASSWORD"></input>
         <button className={styles.signin} onClick={loginHandler}>
           SIGN IN
         </button>
         <div className={styles["support-box"]}>
-          <button>
-            <Link to="/find-account">forgot password?</Link>
-          </button>
+          {/* <button><Link to="/find-account">forgot password?</Link></button> */}
           <button>
             <Link to="/sign-up">sign up</Link>
           </button>

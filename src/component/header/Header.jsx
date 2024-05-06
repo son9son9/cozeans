@@ -15,7 +15,8 @@ const Header = (props) => {
     if (confirm("로그아웃 하시겠습니까?")) {
       props.setLoginSession("");
       alert("로그아웃 되었습니다.");
-      navigate("/");
+      // navigate("/");
+      window.location.reload();
     }
   };
 
@@ -48,7 +49,9 @@ const Header = (props) => {
               </li>
             )}
             <li>
-              <Link to="/cart">CART&nbsp;&nbsp;{myCartArray && <span className={styles["item-quantity"]}>{myCartArray.length}</span>}</Link>
+              <Link to="/cart">
+                CART&nbsp;&nbsp;{myCartArray && myCartArray.length !== 0 && <span className={styles["item-quantity"]}>{myCartArray.length}</span>}
+              </Link>
             </li>
           </ul>
         </nav>

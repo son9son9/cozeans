@@ -1,5 +1,5 @@
 import "./App.css";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Header from "./component/header/Header";
 import Footer from "./component/footer/Footer";
@@ -10,9 +10,8 @@ import Cart from "./page/cart/Cart";
 import Details from "./page/details/Details";
 import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
-import { useState } from "react";
-import { useEffect } from "react";
 import SignUp from "./page/signUp/SignUp";
+// import FindAccount from "./page/findAccount/FindAccount";
 
 function App() {
   const { pathname } = useLocation();
@@ -45,7 +44,7 @@ function App() {
         <Route path="/shop/:page" element={<Shop />} />
         <Route path="/login" element={<Login loginSession={loginSession} setLoginSession={updateLoginHandler} />} />
         <Route path="/sign-up" element={<SignUp />} />
-        {/* <Route path="/find-account" element={<FindAccount />} /> */}
+        {/* <Route path="/find-account" element={<FindAccount loginSession={loginSession} />} /> */}
         <Route path="/cart" element={<Cart cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
         <Route path="/details/:id" element={<Details cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
         <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
