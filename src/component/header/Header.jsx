@@ -2,6 +2,7 @@ import "../../App.css";
 import styles from "./Header.module.scss";
 import cozeansLogo from "../../assets/cozeans.svg";
 import { Link, useNavigate } from "react-router-dom";
+import { rootPath } from "../../config";
 
 const Header = (props) => {
   const navigate = useNavigate();
@@ -23,19 +24,19 @@ const Header = (props) => {
   return (
     <div className={`${styles.container} animate-after-render`}>
       <header className={styles.header}>
-        <Link to="/">
+        <Link to={rootPath}>
           <img src={cozeansLogo} className={styles.logo} alt="Cozeans Logo" />
         </Link>
         <nav>
           <ul>
             <li>
-              <Link to="/">HOME</Link>
+              <Link to={rootPath}>HOME</Link>
             </li>
             <li>
-              <Link to="/shop">NEW ARRIVALS</Link>
+              <Link to={`${rootPath}shop`}>NEW ARRIVALS</Link>
             </li>
             <li>
-              <Link to="/shop">SHOP</Link>
+              <Link to={`${rootPath}shop`}>SHOP</Link>
             </li>
           </ul>
           <ul>
@@ -45,11 +46,11 @@ const Header = (props) => {
               </li>
             ) : (
               <li>
-                <Link to="/login">SIGN IN</Link>
+                <Link to={`${rootPath}login`}>SIGN IN</Link>
               </li>
             )}
             <li>
-              <Link to="/cart">
+              <Link to={`${rootPath}cart`}>
                 CART&nbsp;&nbsp;{myCartArray && myCartArray.length !== 0 && <span className={styles["item-quantity"]}>{myCartArray.length}</span>}
               </Link>
             </li>

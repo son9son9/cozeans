@@ -3,6 +3,7 @@ import "../../App.css";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
+import { rootPath } from "../../config";
 
 const Details = (props) => {
   let isThereSameThingInCart = false;
@@ -10,7 +11,7 @@ const Details = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [itemInfo] = useState(location.state.item);
-  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession.id || "" });
+  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession?.id || "" });
 
   // 장바구니 아이템 추가
   const addToCartHandler = () => {
@@ -150,7 +151,7 @@ const Details = (props) => {
         <div className={styles["button-box"]}>
           <button onClick={addToCartHandler}>ADD TO CART</button>
           <button onClick={onCheckoutHandler}>
-            {/* <Link to="/checkout" > */}
+            {/* <Link to={`${rootPath}checkout`} > */}
             CHECKOUT
             {/* </Link> */}
           </button>

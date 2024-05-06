@@ -4,6 +4,7 @@ import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
+import { rootPath } from "../../config";
 
 const Cart = (props) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
@@ -95,7 +96,7 @@ const Cart = (props) => {
       <div className={styles.checkout}>
         <div>SUM : {formatNumberToCurrency(sum)} KRW</div>
         <button>
-          <Link to="/checkout">CHECKOUT</Link>
+          <Link to={`${rootPath}checkout`}>CHECKOUT</Link>
         </button>
       </div>
     </div>

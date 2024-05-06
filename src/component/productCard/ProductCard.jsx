@@ -4,13 +4,14 @@ import styles from "./ProductCard.module.scss";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import PriceDisplayer from "../priceDisplayer/PriceDisplayer";
+import { rootPath } from "../../config";
 
 const ProductCard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className={styles.card}>
-      <Link to={`/details/${props.data.id.toString()}`} state={{ item: props.data }}>
+      <Link to={`${rootPath}details/${props.data.id.toString()}`} state={{ item: props.data }}>
         <div className={styles.imagebox}>
           {isLoading ? (
             <div className={styles.loader}>
@@ -23,12 +24,12 @@ const ProductCard = (props) => {
       </Link>
       <div className={styles["product-textbox"]}>
         <div className={styles["product-name"]}>
-          <Link to={`/details/${props.data.id.toString()}`} state={{ item: props.data }}>
+          <Link to={`${rootPath}details/${props.data.id.toString()}`} state={{ item: props.data }}>
             {props.data.name}
           </Link>
         </div>
         <div className={styles["product-price"]}>
-          <Link to={`/details/${props.data.id.toString()}`} state={{ item: props.data }}>
+          <Link to={`${rootPath}details/${props.data.id.toString()}`} state={{ item: props.data }}>
             <PriceDisplayer item={props.data} />
           </Link>
         </div>

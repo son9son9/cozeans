@@ -12,6 +12,7 @@ import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
 import SignUp from "./page/signUp/SignUp";
 // import FindAccount from "./page/findAccount/FindAccount";
+import { rootPath } from "./config";
 
 function App() {
   const { pathname } = useLocation();
@@ -39,17 +40,18 @@ function App() {
     <Suspense fallback={<></>}>
       <Header loginSession={loginSession} setLoginSession={updateLoginHandler} cartData={cartData} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/shop/" element={<Navigate replace to="/shop/1" />} />
-        <Route path="/shop/:page" element={<Shop />} />
-        <Route path="/login" element={<Login loginSession={loginSession} setLoginSession={updateLoginHandler} />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        {/* <Route path="/find-account" element={<FindAccount loginSession={loginSession} />} /> */}
-        <Route path="/cart" element={<Cart cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
-        <Route path="/details/:id" element={<Details cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
-        <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
-        <Route path="/order-success" element={<OrderResult isSucceed={true} />} />
-        <Route path="/order-fail" element={<OrderResult isSucceed={false} />} />
+        <Route path={`/`} element={<Navigate replace to={`${rootPath}`} />} />
+        <Route path={`${rootPath}`} element={<Home />} />
+        <Route path={`${rootPath}shop`} element={<Navigate replace to={`${rootPath}shop/1`} />} />
+        <Route path={`${rootPath}shop/:page`} element={<Shop />} />
+        <Route path={`${rootPath}login`} element={<Login loginSession={loginSession} setLoginSession={updateLoginHandler} />} />
+        <Route path={`${rootPath}sign-up`} element={<SignUp />} />
+        {/* <Route path={`${rootPath}find-account`} element={<FindAccount loginSession={loginSession} />} /> */}
+        <Route path={`${rootPath}cart`} element={<Cart cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
+        <Route path={`${rootPath}details/:id`} element={<Details cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
+        <Route path={`${rootPath}checkout`} element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
+        <Route path={`${rootPath}order-success`} element={<OrderResult isSucceed={true} />} />
+        <Route path={`${rootPath}order-fail`} element={<OrderResult isSucceed={false} />} />
       </Routes>
       <Footer />
     </Suspense>

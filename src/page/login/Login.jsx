@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../App.css";
 import styles from "./Login.module.scss";
 import { useState, useEffect } from "react";
+import { rootPath } from "../../config";
 
 const Login = (props) => {
   const navigate = useNavigate();
@@ -49,9 +50,11 @@ const Login = (props) => {
           SIGN IN
         </button>
         <div className={styles["support-box"]}>
-          {/* <button><Link to="/find-account">forgot password?</Link></button> */}
+          {/* <button>
+            <Link to={`${rootPath}find-account`}>forgot password?</Link>
+          </button> */}
           <button>
-            <Link to="/sign-up">sign up</Link>
+            <Link to={`${rootPath}sign-up`}>sign up</Link>
           </button>
         </div>
       </div>

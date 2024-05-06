@@ -13,6 +13,7 @@ import { dataSample } from "../../dataSample";
 import { sortByNew } from "../../common";
 import Modal from "../../component/modal/Modal";
 import ringing from "../../assets/ringing.png";
+import { rootPath } from "../../config";
 
 const Home = () => {
   const marqueeRef = useRef();
@@ -88,7 +89,7 @@ const Home = () => {
             <div className={styles.bannertext}>
               <h2>Brand new trends in Cozeans</h2>
               <p>Let's check it out !</p>
-              <Link to="/shop">
+              <Link to={`${rootPath}shop`}>
                 <button>NEW ARRIVALS</button>
               </Link>
             </div>
@@ -104,7 +105,7 @@ const Home = () => {
       <section className={styles["pic-list"]}>
         <div className={styles.subtitle}>
           <h2 className="judson-bold">NEW IN</h2>
-          <Link to="/shop">
+          <Link to={`${rootPath}shop`}>
             <button className="judson-regular">MORE &gt;</button>
           </Link>
         </div>
@@ -149,7 +150,7 @@ const Home = () => {
             while maintaining a comfortable silhouette.
           </p>
           <button>
-            <Link to="/shop">BUY OUR JEANS</Link>
+            <Link to={`${rootPath}shop`}>BUY OUR JEANS</Link>
           </button>
         </div>
       </section>
