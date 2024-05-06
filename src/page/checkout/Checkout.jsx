@@ -106,6 +106,15 @@ const Checkout = (props) => {
   }, [addressData]);
 
   const handlePaymentRequest = async () => {
+    // phone input 검사
+    if (!customerInput.phoneFirstNumber || !customerInput.phoneMiddleNumber || !customerInput.phoneLastNumber) {
+      alert("유효하지 않은 전화번호입니다. 다시 입력해주세요.");
+      return false;
+    } else if ((customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber)?.length !== 11) {
+      alert("전화번호 형식에 맞지 않습니다. 다시 입력해주세요.");
+      return false;
+    }
+
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     try {
@@ -151,13 +160,17 @@ const Checkout = (props) => {
       <h2>Shipping Infomation</h2>
       <div className={styles["info-box"]}>
         <div className={styles["label-wrapper"]}>
-          <label>받으시는 분</label>
+          <label>
+            받으시는 분<span className={styles.red}>*</span>
+          </label>
         </div>
         <div className={styles["input-wrapper"]} onChange={(e) => setCustomerInput({ ...customerInput, name: e.target.value })}>
           <input type="text" />
         </div>
         <div className={styles["label-wrapper"]}>
-          <label>주소</label>
+          <label>
+            주소 <span className={styles.red}>*</span>
+          </label>
         </div>
         <div className={styles["address-box"]}>
           <input type="text" placeholder="우편번호" readOnly value={addressData.zonecode} />
@@ -171,7 +184,9 @@ const Checkout = (props) => {
           />
         </div>
         <div className={styles["label-wrapper"]}>
-          <label>휴대전화</label>
+          <label>
+            휴대전화 <span className={styles.red}>*</span>
+          </label>
         </div>
         <div className={styles["input-wrapper"]}>
           <input
@@ -196,7 +211,9 @@ const Checkout = (props) => {
           />
         </div>
         <div className={styles["label-wrapper"]}>
-          <label>E-mail</label>
+          <label>
+            E-mail <span className={styles.red}>*</span>
+          </label>
         </div>
         <div className={styles["input-wrapper"]}>
           <input type="text" className={styles[""]} onChange={(e) => setCustomerInput({ ...customerInput, email: e.target.value })} />

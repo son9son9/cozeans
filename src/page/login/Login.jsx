@@ -14,15 +14,19 @@ const Login = (props) => {
     accounts && (accounts = JSON.parse(accounts));
 
     // DB에 로그인하려는 계정 정보가 있는지 검사
-    for (let i = 0; i < accounts.length; i++) {
-      if (accounts[i].id === idInput && accounts[i].password === pwInput) {
-        // 일치하는 계정 있을 시 session 업데이트하고 로그인 로직 실행
-        props.setLoginSession(JSON.stringify({ id: idInput, name: accounts[i].name }));
-        navigate(rootPath);
-        return;
-      } else {
-        alert("로그인 정보가 일치하지 않습니다. 다시 입력해주세요.");
+    if (accounts || accounts?.length > 0) {
+      for (let i = 0; i < accounts.length; i++) {
+        if (accounts[i].id === idInput && accounts[i].password === pwInput) {
+          // 일치하는 계정 있을 시 session 업데이트하고 로그인 로직 실행
+          props.setLoginSession(JSON.stringify({ id: idInput, name: accounts[i].name }));
+          navigate(rootPath);
+          return;
+        } else {
+          alert("로그인 정보가 일치하지 않습니다. 다시 입력해주세요.");
+        }
       }
+    } else {
+      alert("로그인 정보가 존재하지 않습니다. 회원가입 후 다시 진행해주세요.");
     }
   };
 

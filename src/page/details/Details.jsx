@@ -51,12 +51,20 @@ const Details = (props) => {
       return false;
     }
 
+    // 비로그인 확인창
+    if (!loginSession) {
+      if (confirm("현재 비로그인 상태입니다. 로그인하시겠습니까?")) {
+        navigate(`${rootPath}login`);
+        return;
+      }
+    }
+
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
     // quantity 한개 추가
     // user 키 추가
     let copy = [
       ...currentCart(),
-      { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1, user: loginSession.id || "" },
+      { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1, user: loginSession?.id || "" },
     ];
     props.setCartData(JSON.stringify(copy));
   };

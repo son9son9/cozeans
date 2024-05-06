@@ -10,7 +10,7 @@ const SignUp = () => {
   const [pwInput, setPwInput] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [pwCheckInput, setPwCheckInput] = useState("");
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(true);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
   const signUpHandler = () => {
     // input 입력 여부 검사

@@ -10,7 +10,7 @@ const Cart = (props) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
   // 로컬스토리지 장바구니 데이터 불러오기
   const [items, setItems] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession.id || Boolean(item.user) === Boolean(loginSession.id))
+    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   const [sum, setSum] = useState(0);
 

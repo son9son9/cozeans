@@ -81,7 +81,6 @@
       }
     }
   }
-
   .price {
     padding-right: 1rem;
   }
@@ -89,7 +88,6 @@
     font-weight: 600;
     font-size: medium;
   }
-
   .btn-checkout {
     border: 1px solid #3c3633;
     padding: 0.8rem 1.4rem;
@@ -99,5 +97,10 @@
       background-color: #747264;
       color: #eeedeb;
     }
+  }
+  .red {
+    color: #dd0000;
+    font-weight: 500;
+    padding: 0 0.2rem;
   }
 }
