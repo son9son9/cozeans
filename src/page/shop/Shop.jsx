@@ -6,6 +6,7 @@ import { dataSample } from "../../dataSample";
 import { useState } from "react";
 import { sortByNew } from "../../common";
 import { useEffect } from "react";
+import { rootPath } from "../../config";
 
 // chunkUnit만큼 itemList를 잘라 chunkedList에 저장
 const sliceList = (list, chunkUnit) => {
@@ -118,14 +119,14 @@ const Shop = (props) => {
         </div>
         <div className={styles.pagination}>
           <Link
-            to={currentPage === 1 ? `/shop/1` : `/shop/${(currentPage - 1).toString()}`}
+            to={currentPage === 1 ? `${rootPath}shop/1` : `${rootPath}shop/${(currentPage - 1).toString()}`}
             onClick={() => (currentPage === 1 ? false : setCurrentPage(currentPage - 1))}
           >
             &lt;
           </Link>
           {chunkedList.map((element, index) => (
             <Link
-              to={`/shop/${(index + 1).toString()}`}
+              to={`${rootPath}shop/${(index + 1).toString()}`}
               className={currentPage === index + 1 ? styles.emphasis : ""}
               onClick={() => setCurrentPage(index + 1)}
               key={index}
@@ -134,7 +135,7 @@ const Shop = (props) => {
             </Link>
           ))}
           <Link
-            to={currentPage === chunkedList.length ? `/shop/${chunkedList.length}` : `/shop/${(currentPage + 1).toString()}`}
+            to={currentPage === chunkedList.length ? `${rootPath}shop/${chunkedList.length}` : `${rootPath}shop/${(currentPage + 1).toString()}`}
             onClick={() => (currentPage === chunkedList.length ? false : setCurrentPage(currentPage + 1))}
           >
             &gt;

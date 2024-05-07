@@ -3,4 +3,52 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  button {
+    padding: 1rem;
+  }
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+  .content {
+    width: 28rem;
+    h2 {
+      margin: 2rem 0;
+    }
+    h3 {
+      margin: 1rem 0;
+    }
+    .complete {
+      width: 5rem;
+    }
+    .info {
+      border-top: 1px solid #3c363333;
+      border-bottom: 1px solid #3c363333;
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.4rem 1rem;
+
+        &:first-child {
+          border-bottom: 1px solid #3c363333;
+        }
+        &:nth-child(2) {
+          padding-top: 1rem;
+        }
+        &:last-child {
+          padding-bottom: 1rem;
+        }
+
+        .thumbnail {
+          width: 8rem;
+          padding: 1rem 0;
+        }
+      }
+      .customer-info {
+      }
+    }
+  }
 }

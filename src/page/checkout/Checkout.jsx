@@ -28,7 +28,9 @@ const Checkout = (props) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressData, setAddressData] = useState({});
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [items] = useState(props.cartData && JSON.parse(props.cartData));
+  const [items] = useState(
+    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+  );
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
   const [customerInput, setCustomerInput] = useState({
@@ -106,7 +108,19 @@ const Checkout = (props) => {
   }, [addressData]);
 
   const handlePaymentRequest = async () => {
-    // phone input 검사
+    // input 검사
+    if (!customerInput.name) {
+      alert("이름을 입력하세요.");
+      return false;
+    }
+    if (!customerInput.address || !customerInput.addressZonecode) {
+      alert("주소를 입력하세요.");
+      return false;
+    }
+    if (!customerInput.email) {
+      alert("이메일을 입력하세요.");
+      return false;
+    }
     if (!customerInput.phoneFirstNumber || !customerInput.phoneMiddleNumber || !customerInput.phoneLastNumber) {
       alert("유효하지 않은 전화번호입니다. 다시 입력해주세요.");
       return false;
@@ -115,17 +129,37 @@ const Checkout = (props) => {
       return false;
     }
 
+    // generate random string. it would be orderId
+    const orderId = generateRandomString();
+
+    // localStorage 이전 결제정보 불러오기
+    let orderHistory = localStorage.getItem("cozeans-order-info");
+    orderHistory = orderHistory && JSON.parse(orderHistory);
+    // localStorage에 결제정보 저장
+    const orderInfo = {
+      orderId: orderId,
+      customerInfo: customerInput,
+      amount: price,
+      orderDate: Date.now(),
+      status: "pending",
+    };
+    if (orderHistory) {
+      localStorage.setItem("cozeans-order-info", JSON.stringify([...orderHistory, orderInfo]));
+    } else {
+      localStorage.setItem("cozeans-order-info", JSON.stringify([orderInfo]));
+    }
+
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     try {
       await paymentWidget?.requestPayment({
-        orderId: generateRandomString(),
+        orderId: orderId,
         orderName: `${items[0].name}${items.length > 1 && ` 외 ${items.length - 1}건`}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,
         customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
-        successUrl: `${window.location.origin}/order-success`,
-        failUrl: `${window.location.origin}/order-fail`,
+        successUrl: `${window.location.origin}${rootPath}order-success`,
+        failUrl: `${window.location.origin}${rootPath}order-fail`,
       });
     } catch (error) {
       console.error("Error requesting payment:", error);

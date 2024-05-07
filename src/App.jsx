@@ -50,7 +50,10 @@ function App() {
         <Route path={`${rootPath}cart`} element={<Cart cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
         <Route path={`${rootPath}details/:id`} element={<Details cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
         <Route path={`${rootPath}checkout`} element={<Checkout cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />} />
-        <Route path={`${rootPath}order-success`} element={<OrderResult isSucceed={true} />} />
+        <Route
+          path={`${rootPath}order-success`}
+          element={<OrderResult isSucceed={true} cartData={cartData} setCartData={updateCartDataHandler} loginSession={loginSession} />}
+        />
         <Route path={`${rootPath}order-fail`} element={<OrderResult isSucceed={false} />} />
       </Routes>
       <Footer />

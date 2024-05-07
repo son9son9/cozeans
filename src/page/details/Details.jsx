@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -12,9 +12,10 @@ const Details = (props) => {
   const location = useLocation();
   const [itemInfo] = useState(location.state.item);
   const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession?.id || "" });
+  const [checkoutClick, setCheckoutClick] = useState(false);
 
   // 장바구니 아이템 추가
-  const addToCartHandler = () => {
+  const addToCartHandler = (target) => {
     // 컬러와 사이즈 선택했는지 체크
     if (!selectedItemInfo.color) {
       alert("컬러를 선택해주세요.");
@@ -46,9 +47,22 @@ const Details = (props) => {
         )
           isThereSameThingInCart = true;
       });
+
+    // 장바구니에 동일 상품이 있을 때
     if (isThereSameThingInCart) {
-      alert("동일한 상품이 이미 장바구니에 존재합니다.");
-      return false;
+      if (target === "CHECKOUT") {
+        // Checkout 클릭 시 장바구니에 추가하지 않고 카트 페이지로 이동
+        navigate(`${rootPath}cart`);
+        return;
+      } else {
+        // 장바구니 추가 클릭 시 alert
+        alert("동일한 상품이 이미 장바구니에 존재합니다.");
+        return false;
+      }
+    }
+    // CHECKOUT 클릭 시 장바구니에 물품 추가하고 cart 페이지로 바로 이동
+    if (target === "CHECKOUT") {
+      navigate(`${rootPath}cart`);
     }
 
     // 비로그인 확인창
@@ -69,10 +83,9 @@ const Details = (props) => {
     props.setCartData(JSON.stringify(copy));
   };
 
-  const onCheckoutHandler = () => {
+  const onCheckoutHandler = (e) => {
     // 현재 임시로 장바구니 추가와 같은 로직 적용
-    addToCartHandler();
-    isThereSameThingInCart || navigate(`/checkout`);
+    addToCartHandler(e.target.innerHTML);
   };
   const colorSelectHandler = (e) => {
     setSelectedItemInfo({ ...selectedItemInfo, color: e.currentTarget.value });
@@ -86,17 +99,20 @@ const Details = (props) => {
       <div className={styles.looks}>
         <img src={itemInfo.thumbnail} alt="thumbnail" />
         <h3>Sample images for assortment</h3>
-        <img src={`${rootPath}src/assets/attowidedenim21.png`} alt="image1" />
-        <img src={`${rootPath}src/assets/attowidedenim22.png`} alt="image2" />
-        <img src={`${rootPath}src/assets/attowidedenim23.png`} alt="image3" />
-        <img src={`${rootPath}src/assets/attowidedenim24.png`} alt="image4" />
-        <img src={`${rootPath}src/assets/attowidedenim25.png`} alt="image5" />
-        <img src={`${rootPath}src/assets/attowidedenim26.png`} alt="image6" />
-        <img src={`${rootPath}src/assets/attowidedenim27.png`} alt="image7" />
-        <img src={`${rootPath}src/assets/attowidedenim28.png`} alt="image8" />
-        <img src={`${rootPath}src/assets/attowidedenim29.png`} alt="image9" />
-        <img src={`${rootPath}src/assets/attowidedenim30.png`} alt="image10" />
-        <img src={`${rootPath}src/assets/attowidedenim31.png`} alt="image11" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06885.jpg`} alt="image1" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06889.jpg`} alt="image2" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06895.jpg`} alt="image3" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06900.jpg`} alt="image4" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06909.jpg`} alt="image5" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06916.jpg`} alt="image6" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06919.jpg`} alt="image7" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06922.jpg`} alt="image8" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06930.jpg`} alt="image9" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240506/KakaoTalk_Photo_2024-05-06-13-42-1120002.jpeg`} alt="image10" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240506/KakaoTalk_Photo_2024-05-06-13-42-1120003.jpeg`} alt="image11" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240506/KakaoTalk_Photo_2024-05-06-13-42-1220006.jpeg`} alt="image12" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240506/KakaoTalk_Photo_2024-05-06-13-42-1220008.jpeg`} alt="image13" />
+        <img src={`https://hififnk.kr/web/upload/NNEditor/20240506/KakaoTalk_Photo_2024-05-06-13-42-1220009.jpeg`} alt="image14" />
       </div>
       <div className={styles.explanation}>
         <div className={styles["title-box"]}>
@@ -158,10 +174,12 @@ const Details = (props) => {
         </div>
         <div className={styles["button-box"]}>
           <button onClick={addToCartHandler}>ADD TO CART</button>
-          <button onClick={onCheckoutHandler}>
-            {/* <Link to={`${rootPath}checkout`} > */}
+          <button
+            onClick={(e) => {
+              onCheckoutHandler(e);
+            }}
+          >
             CHECKOUT
-            {/* </Link> */}
           </button>
         </div>
       </div>

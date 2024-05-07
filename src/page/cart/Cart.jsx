@@ -42,8 +42,10 @@ const Cart = (props) => {
   // cartStorage가 비어있을 땐 비어있음 컴포넌트 반환
   if (!items || items.length === 0) {
     return (
-      <div className={`${styles.container} animate-after-render`}>
-        <h2>Your cart is empty.</h2>
+      <div className={`${styles.container} animate-after-render`} style={{ justifyContent: "center" }}>
+        <div>
+          <h2>Your cart is empty.</h2>
+        </div>
       </div>
     );
   }
