@@ -1,6 +1,6 @@
 ## 외국 데님 브랜드 쇼핑몰 사이트, Cozeans
 
-![cozeans-cover.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/0cd0ca13-2348-4546-bf09-889c1e32c2ab/0820ff63-0fa6-419c-af48-1e1ab70764e9/cozeans-cover.png)
+![cozeans-cover.png]([https://prod-files-secure.s3.us-west-2.amazonaws.com/0cd0ca13-2348-4546-bf09-889c1e32c2ab/0820ff63-0fa6-419c-af48-1e1ab70764e9/cozeans-cover.png](https://rigorous-wandflower-6ee.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F0cd0ca13-2348-4546-bf09-889c1e32c2ab%2F0820ff63-0fa6-419c-af48-1e1ab70764e9%2Fcozeans-cover.png?table=block&id=131148f4-0487-47b2-8999-bd3296bd7a98&spaceId=0cd0ca13-2348-4546-bf09-889c1e32c2ab&width=1420&userId=&cache=v2))
 
 ### [프로젝트 링크 바로가기](https://son9son9.github.io/cozeans/)
 
