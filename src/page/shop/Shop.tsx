@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { rootPath } from "../../config";
 
 // chunkUnit만큼 itemList를 잘라 chunkedList에 저장
-const sliceList = (list, chunkUnit) => {
+const sliceList = (list: any, chunkUnit: any) => {
   let arr = [];
   for (let i = 0; i < list.length; i += chunkUnit) {
     arr.push(list.slice(i, i + chunkUnit));
@@ -17,7 +17,7 @@ const sliceList = (list, chunkUnit) => {
   return arr;
 };
 
-const Shop = (props) => {
+const Shop = (props: any) => {
   const { page } = useParams();
   const [currentPage, setCurrentPage] = useState(Number(page));
   const [sortMode, setSortMode] = useState("new");
@@ -29,12 +29,12 @@ const Shop = (props) => {
   const [chunkedList, setChunkedList] = useState(sliceList(itemList, chunkUnit));
 
   // 할인 중이면 할인가 반환, 아니면 정가 반환하는 함수
-  const decidedPrice = (item) => {
+  const decidedPrice = (item: any) => {
     if (item.discountedPrice) return item.discountedPrice;
     else return item.price;
   };
 
-  const handleUpdate = (mode) => {
+  const handleUpdate = (mode: string) => {
     const arr = [...dataSample];
 
     if (mode === "new") {
@@ -113,7 +113,7 @@ const Shop = (props) => {
           </div>
         </div>
         <div className={styles["product-list"]}>
-          {chunkedList[currentPage - 1].map((item, index) => (
+          {chunkedList[currentPage - 1].map((item: any, index: number) => (
             <ProductCard data={item} key={index} />
           ))}
         </div>

@@ -1,16 +1,6 @@
-export const itemModel = {
-  id: Number,
-  name: String,
-  thumbnail: String,
-  size: String,
-  color: String,
-  quantity: Number,
-  price: String,
-  discountedPrice: String,
-  registrationDate: String,
-};
+import { ItemModel } from "./models/ItemModel";
 
-export const dataSample = [
+export const dataSample: ItemModel[] = [
   {
     id: 1,
     name: "Ronty Wide Denim",

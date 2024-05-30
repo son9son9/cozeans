@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../../App.css";
 import styles from "./Modal.module.scss";
 
-const Modal = (props) => {
+const Modal = (props: any) => {
   const toggleModal = () => {
     props.toggleModal();
   };

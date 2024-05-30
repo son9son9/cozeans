@@ -20,13 +20,13 @@ function App() {
   const [loginSession, setLoginSession] = useState(sessionStorage.getItem("cozeans-login-session"));
 
   // state와 localStorage에 장바구니 데이터 업데이트
-  const updateCartDataHandler = (data) => {
+  const updateCartDataHandler = (data: any) => {
     setCartData(data);
     localStorage.setItem("cozeans-my-cart", data);
   };
 
   // sessionStorage에 로그인 세션 정보 업데이트
-  const updateLoginHandler = (data) => {
+  const updateLoginHandler = (data: any) => {
     setLoginSession(data);
     sessionStorage.setItem("cozeans-login-session", data);
   };

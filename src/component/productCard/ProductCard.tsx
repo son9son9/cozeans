@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import PriceDisplayer from "../priceDisplayer/PriceDisplayer";
 import { rootPath } from "../../config";
 
-const ProductCard = (props) => {
+const ProductCard = (props: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (

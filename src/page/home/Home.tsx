@@ -16,8 +16,8 @@ import ringing from "../../assets/ringing.png";
 import { rootPath } from "../../config";
 
 const Home = () => {
-  const marqueeRef = useRef();
-  const [vpWidth, setVpWidth] = useState();
+  const marqueeRef: any = useRef();
+  const [vpWidth, setVpWidth]: any = useState();
   const [offsetWidth, setOffsetWidth] = useState();
   const [numOfElement, setNumOfElement] = useState(0);
   const [circulateBannerFlag, setCirculateBannerFlag] = useState(1);
@@ -27,7 +27,7 @@ const Home = () => {
     return sortByNew(arr).slice(0, 5);
   });
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
-  const [newslettersEmail, setNewslettersEmail] = useState();
+  const [newslettersEmail, setNewslettersEmail]: any = useState();
 
   const toggleFollowModal = () => {
     if (!newslettersEmail) {
@@ -39,12 +39,12 @@ const Home = () => {
   // 배너 무한 스크롤 텍스트 복제
   useEffect(() => {
     // 뷰포트, 전광판 텍스트 길이 구하기
-    setVpWidth(document.documentElement.clientWidth);
+    setVpWidth(document.documentElement.clientWidth as any);
     setOffsetWidth(marqueeRef.current.offsetWidth);
 
     // 복제할 텍스트 개수 구하기
     let count = 1;
-    let totalWidth = offsetWidth;
+    let totalWidth: any = offsetWidth;
 
     while (totalWidth < vpWidth + offsetWidth) {
       totalWidth += offsetWidth;
@@ -53,9 +53,9 @@ const Home = () => {
     setNumOfElement(count);
 
     // 텍스트 복제
-    const numArray = Array.from({ length: numOfElement }, (_, i) => i + 1);
+    const numArray: any = Array.from({ length: numOfElement }, (_, i) => i + 1);
     setBeltText(
-      numArray.map((i) => {
+      numArray.map((i: any) => {
         return <div key={i}>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>;
       })
     );
@@ -88,7 +88,7 @@ const Home = () => {
             />
             <div className={styles.bannertext}>
               <h2>Brand new trends in Cozeans</h2>
-              <p>Let's check it out !</p>
+              <p>Let&apos;s check it out !</p>
               <Link to={`${rootPath}shop`}>
                 <button>NEW ARRIVALS</button>
               </Link>

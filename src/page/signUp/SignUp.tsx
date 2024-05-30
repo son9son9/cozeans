@@ -36,7 +36,7 @@ const SignUp = () => {
     }
 
     // 로컬스토리지 계정 정보 불러와서 JSON parsing
-    let accountDatabase = localStorage.getItem("cozeans-accounts");
+    let accountDatabase: any = localStorage.getItem("cozeans-accounts");
     accountDatabase && (accountDatabase = JSON.parse(accountDatabase));
     // id 중복 검사
     if (accountDatabase) {

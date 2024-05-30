@@ -7,7 +7,7 @@ import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { Link } from "react-router-dom";
 
-const OrderResult = (props) => {
+const OrderResult = (props: any) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
@@ -15,9 +15,10 @@ const OrderResult = (props) => {
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
   const [cart] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
-  const orderHistory = localStorage.getItem("cozeans-order-info") && JSON.parse(localStorage.getItem("cozeans-order-info"));
+  let orderHistory: any = localStorage.getItem("cozeans-order-info");
+  orderHistory = orderHistory && JSON.parse(orderHistory);
   const currentOrder = orderHistory && orderHistory[orderHistory.length - 1];
 
   const orderDate = () => {
@@ -68,7 +69,7 @@ const OrderResult = (props) => {
             </div>
             <div className={styles["info-row"]}>
               <span>주문 금액</span>
-              <span>{formatNumberToCurrency(amount)} 원</span>
+              <span>{formatNumberToCurrency(Number(amount))} 원</span>
             </div>
             <div className={styles["customer-info"]}></div>
           </div>

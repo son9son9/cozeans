@@ -6,15 +6,15 @@ import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 
-const Cart = (props) => {
+const Cart = (props: any) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
   // 로컬스토리지 장바구니 데이터 불러오기
   const [items, setItems] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   const [sum, setSum] = useState(0);
 
-  const onCloseHandler = (i) => {
+  const onCloseHandler = (i: number) => {
     if (confirm("장바구니에서 삭제하시겠습니까?")) {
       const arr = items;
       arr.splice(i, 1);
@@ -29,7 +29,7 @@ const Cart = (props) => {
   useEffect(() => {
     let total = 0;
     items &&
-      items.map((item, index) => {
+      items.map((item: any) => {
         if (item.discountedPrice) {
           total += Number(item.discountedPrice * item.quantity);
         } else if (item.price) {
@@ -54,7 +54,7 @@ const Cart = (props) => {
       <h3 className={styles.title}>Your Cart</h3>
       <div className={styles.list}>
         {/* 아이템 리스트 배열 */}
-        {items.map((item, index) => (
+        {items.map((item: any, index: number) => (
           <div className={styles.item} key={index}>
             <div className={styles["img-info-wrapper"]}>
               <img src={item.thumbnail} alt="Item Image" />

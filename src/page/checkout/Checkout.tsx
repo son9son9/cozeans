@@ -14,22 +14,22 @@ const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 const customerKey = "ub4-rdnIUIaHFUiLi0LL1";
 // const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
-const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
+const generateRandomString = () => window.btoa(Math.random().toString()).slice(0, 20);
 
-const Checkout = (props) => {
+const Checkout = (props: any) => {
   const navigate = useNavigate();
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
-  const [paymentWidget, setPaymentWidget] = useState(null);
+  const [paymentWidget, setPaymentWidget]: any = useState(null);
   const paymentMethodsWidgetRef = useRef(null);
   const [price, setPrice] = useState(0);
   const [originPrice, setOriginPrice] = useState(0);
   const [discountTemp, setDiscountTemp] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [addressData, setAddressData] = useState({});
+  const [addressData, setAddressData]: any = useState();
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [items] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
@@ -56,7 +56,7 @@ const Checkout = (props) => {
   useEffect(() => {
     const fetchPaymentWidget = async () => {
       try {
-        const loadedWidget = await loadPaymentWidget(widgetClientKey, customerKey);
+        const loadedWidget: any = await loadPaymentWidget(widgetClientKey, customerKey);
         setPaymentWidget(loadedWidget);
       } catch (error) {
         console.error("Error fetching payment widget:", error);
@@ -66,7 +66,7 @@ const Checkout = (props) => {
     // 결제 금액 구하기
     let total = 0;
     items &&
-      items.map((item, index) => {
+      items.map((item: any) => {
         if (item.discountedPrice) {
           total += Number(item.discountedPrice * item.quantity);
         } else if (item.price) {
@@ -93,7 +93,7 @@ const Checkout = (props) => {
   }, [paymentWidget, price]);
 
   useEffect(() => {
-    const paymentMethodsWidget = paymentMethodsWidgetRef.current;
+    const paymentMethodsWidget: any = paymentMethodsWidgetRef.current;
 
     if (paymentMethodsWidget == null) {
       return;
@@ -169,13 +169,13 @@ const Checkout = (props) => {
   const toggleAddressModal = () => {
     setIsAddressModalOpen(!isAddressModalOpen);
   };
-  const inputAddress = (data) => {
+  const inputAddress = (data: any) => {
     setAddressData(data);
   };
   const toggleCouponModal = () => {
     setIsCouponModalOpen(!isCouponModalOpen);
   };
-  const radioCheckHandler = (e) => {
+  const radioCheckHandler = (e: any) => {
     setDiscountTemp(e.currentTarget.value);
   };
   const couponConfirmHandler = () => {
@@ -198,7 +198,7 @@ const Checkout = (props) => {
             받으시는 분<span className={styles.red}>*</span>
           </label>
         </div>
-        <div className={styles["input-wrapper"]} onChange={(e) => setCustomerInput({ ...customerInput, name: e.target.value })}>
+        <div className={styles["input-wrapper"]} onChange={(e: any) => setCustomerInput({ ...customerInput, name: e.target.value })}>
           <input type="text" />
         </div>
         <div className={styles["label-wrapper"]}>

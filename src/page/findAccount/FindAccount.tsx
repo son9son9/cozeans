@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { rootPath } from "../../config";
 
-const FindAccount = (props) => {
+const FindAccount = (props: any) => {
   const navigate = useNavigate();
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
 

@@ -4,13 +4,13 @@ import styles from "./Login.module.scss";
 import { useState, useEffect } from "react";
 import { rootPath } from "../../config";
 
-const Login = (props) => {
+const Login = (props: any) => {
   const navigate = useNavigate();
   const [idInput, setIdInput] = useState("");
   const [pwInput, setPwInput] = useState("");
 
   const loginHandler = () => {
-    let accounts = localStorage.getItem("cozeans-accounts");
+    let accounts: any = localStorage.getItem("cozeans-accounts");
     accounts && (accounts = JSON.parse(accounts));
 
     // DB에 로그인하려는 계정 정보가 있는지 검사
@@ -30,7 +30,7 @@ const Login = (props) => {
     }
   };
 
-  const keyPressHandler = (e) => {
+  const keyPressHandler = (e: any) => {
     if (e.keyCode === 13) {
       loginHandler();
     }

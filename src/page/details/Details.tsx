@@ -5,17 +5,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { rootPath } from "../../config";
 
-const Details = (props) => {
+const Details = (props: any) => {
   let isThereSameThingInCart = false;
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
   const navigate = useNavigate();
   const location = useLocation();
   const [itemInfo] = useState(location.state.item);
   const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession?.id || "" });
-  const [checkoutClick, setCheckoutClick] = useState(false);
+  // const [checkoutClick, setCheckoutClick] = useState(false);
 
   // 장바구니 아이템 추가
-  const addToCartHandler = (target) => {
+  const addToCartHandler = (target: any) => {
     // 컬러와 사이즈 선택했는지 체크
     if (!selectedItemInfo.color) {
       alert("컬러를 선택해주세요.");
@@ -37,7 +37,7 @@ const Details = (props) => {
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
     props.cartData &&
-      JSON.parse(props.cartData)?.map((item, index) => {
+      JSON.parse(props.cartData)?.map((item: any) => {
         // stringify()로 두 객체 비교
         if (
           item.id === selectedItemInfo.id &&
@@ -83,14 +83,14 @@ const Details = (props) => {
     props.setCartData(JSON.stringify(copy));
   };
 
-  const onCheckoutHandler = (e) => {
+  const onCheckoutHandler = (e: any) => {
     // 현재 임시로 장바구니 추가와 같은 로직 적용
     addToCartHandler(e.target.innerHTML);
   };
-  const colorSelectHandler = (e) => {
+  const colorSelectHandler = (e: any) => {
     setSelectedItemInfo({ ...selectedItemInfo, color: e.currentTarget.value });
   };
-  const sizeSelectHandler = (e) => {
+  const sizeSelectHandler = (e: any) => {
     setSelectedItemInfo({ ...selectedItemInfo, size: e.currentTarget.value });
   };
 
@@ -117,7 +117,7 @@ const Details = (props) => {
       <div className={styles.explanation}>
         <div className={styles["title-box"]}>
           <h3 className={styles.title}>{itemInfo.name}</h3>
-          <div className={styles[("price", "bold")]}>
+          <div className={styles["price bold"]}>
             <PriceDisplayer item={itemInfo} />
           </div>
         </div>
@@ -153,14 +153,14 @@ const Details = (props) => {
         <div className={styles["select-box"]}>
           <p>Color</p>
           <select name="selectColor" id="" onChange={colorSelectHandler}>
-            <option value="" defaultValue>
+            <option value="" defaultChecked>
               N/A
             </option>
             <option value={0}>Free</option>
           </select>
           <p>Size</p>
           <select name="selectSize" id="" onChange={sizeSelectHandler}>
-            <option value="" defaultValue>
+            <option value="" defaultChecked>
               N/A
             </option>
             <option value={28}>28</option>
