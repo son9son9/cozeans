@@ -11,7 +11,8 @@ const Header = (props: any) => {
   // 현재 세션 id와 일치하는 user의 장바구니 필터링 또는
   // 현제 세션 id와 user의 장바구니가 falsy 값을 때, 즉 비로그인(게스트)일 때 필터링
   const myCartArray =
-    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id));
+    props.cartData &&
+    JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id));
 
   const logoutClickHandler = () => {
     if (confirm("로그아웃 하시겠습니까?")) {

@@ -4,6 +4,7 @@ import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { rootPath } from "../../config";
+import { ItemModel } from "../../models/ItemModel";
 
 const Details = (props: any) => {
   let isThereSameThingInCart = false;
@@ -37,7 +38,7 @@ const Details = (props: any) => {
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
     props.cartData &&
-      JSON.parse(props.cartData)?.map((item: any) => {
+      JSON.parse(props.cartData)?.map((item: ItemModel) => {
         // stringify()로 두 객체 비교
         if (
           item.id === selectedItemInfo.id &&

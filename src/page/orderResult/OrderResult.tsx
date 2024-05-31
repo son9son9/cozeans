@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { Link } from "react-router-dom";
+import { ItemModel } from "../../models/ItemModel";
 
 const OrderResult = (props: any) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
@@ -15,7 +16,7 @@ const OrderResult = (props: any) => {
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
   const [cart] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   let orderHistory: any = localStorage.getItem("cozeans-order-info");
   orderHistory = orderHistory && JSON.parse(orderHistory);

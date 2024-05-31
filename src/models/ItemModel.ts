@@ -8,4 +8,5 @@ export type ItemModel = {
   price: number;
   discountedPrice: number | "";
   registrationDate: string;
+  user?: string;
 };

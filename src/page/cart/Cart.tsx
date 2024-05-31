@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
+import { ItemModel } from "../../models/ItemModel";
 
 const Cart = (props: any) => {
   const loginSession = props.loginSession && JSON.parse(props.loginSession);
   // 로컬스토리지 장바구니 데이터 불러오기
   const [items, setItems] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   const [sum, setSum] = useState(0);
 
@@ -29,11 +30,11 @@ const Cart = (props: any) => {
   useEffect(() => {
     let total = 0;
     items &&
-      items.map((item: any) => {
+      items.map((item: ItemModel) => {
         if (item.discountedPrice) {
-          total += Number(item.discountedPrice * item.quantity);
+          total += +item.discountedPrice * +item.quantity;
         } else if (item.price) {
-          total += Number(item.price * item.quantity);
+          total += +item.price * +item.quantity;
         }
       });
     setSum(total);
@@ -54,7 +55,7 @@ const Cart = (props: any) => {
       <h3 className={styles.title}>Your Cart</h3>
       <div className={styles.list}>
         {/* 아이템 리스트 배열 */}
-        {items.map((item: any, index: number) => (
+        {items.map((item: ItemModel, index: number) => (
           <div className={styles.item} key={index}>
             <div className={styles["img-info-wrapper"]}>
               <img src={item.thumbnail} alt="Item Image" />

@@ -1,12 +1,14 @@
 import "../../App.css";
 import styles from "./Checkout.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, FormEventHandler, useEffect, useRef, useState } from "react";
 import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
 import Modal from "../../component/modal/Modal";
 import DaumPostCode from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
+import { ItemModel } from "../../models/ItemModel";
+import { OrderInfo } from "../../models/OrderInfoModel";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
@@ -28,8 +30,8 @@ const Checkout = (props: any) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressData, setAddressData]: any = useState();
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [items] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: any) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
+  const [items]: any = useState(
+    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
   );
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
@@ -66,11 +68,11 @@ const Checkout = (props: any) => {
     // 결제 금액 구하기
     let total = 0;
     items &&
-      items.map((item: any) => {
+      items.map((item: ItemModel) => {
         if (item.discountedPrice) {
-          total += Number(item.discountedPrice * item.quantity);
+          total += +item.discountedPrice * +item.quantity;
         } else if (item.price) {
-          total += Number(item.price * item.quantity);
+          total += +item.price * +item.quantity;
         }
       });
     setSum(total);
@@ -104,7 +106,7 @@ const Checkout = (props: any) => {
 
   // 주소 입력란의 주소를 state에 저장
   useEffect(() => {
-    setCustomerInput({ ...customerInput, addressZonecode: addressData.zonecode, address: addressData.address });
+    setCustomerInput({ ...customerInput, addressZonecode: addressData?.zonecode, address: addressData?.address });
   }, [addressData]);
 
   const handlePaymentRequest = async () => {
@@ -136,7 +138,7 @@ const Checkout = (props: any) => {
     let orderHistory = localStorage.getItem("cozeans-order-info");
     orderHistory = orderHistory && JSON.parse(orderHistory);
     // localStorage에 결제정보 저장
-    const orderInfo = {
+    const orderInfo: OrderInfo = {
       orderId: orderId,
       customerInfo: customerInput,
       amount: price,
@@ -207,9 +209,9 @@ const Checkout = (props: any) => {
           </label>
         </div>
         <div className={styles["address-box"]}>
-          <input type="text" placeholder="우편번호" readOnly value={addressData.zonecode} />
+          <input type="text" placeholder="우편번호" readOnly value={addressData?.zonecode} />
           <button onClick={toggleAddressModal}>주소 검색</button>
-          <input type="text" className={styles["long-input"]} placeholder="기본주소" readOnly value={addressData.address || ""} />
+          <input type="text" className={styles["long-input"]} placeholder="기본주소" readOnly value={addressData?.address} />
           <input
             type="text"
             className={styles["long-input"]}
@@ -255,7 +257,7 @@ const Checkout = (props: any) => {
         <div className={styles["label-wrapper"]}>
           <label>배송 메시지</label>
         </div>
-        <textarea onChange={(e) => setCustomerInput({ ...customerInput, message: e.target.value })} />
+        <textarea onChange={(e: any) => setCustomerInput({ ...customerInput, message: e.target.value })} />
       </div>
       <h2>Payment Amount</h2>
       <div className={styles["info-box"]}>
