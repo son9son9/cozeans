@@ -9,6 +9,7 @@ import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { OrderInfo } from "../../models/OrderInfoModel";
+import { useSelector } from "react-redux";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
@@ -20,7 +21,7 @@ const generateRandomString = () => window.btoa(Math.random().toString()).slice(0
 
 const Checkout = (props: any) => {
   const navigate = useNavigate();
-  const loginSession = props.loginSession && JSON.parse(props.loginSession);
+  const loginSession = useSelector((state: any) => state.loginSession.value);
   const [paymentWidget, setPaymentWidget]: any = useState(null);
   const paymentMethodsWidgetRef = useRef(null);
   const [price, setPrice] = useState(0);
@@ -30,9 +31,10 @@ const Checkout = (props: any) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addressData, setAddressData]: any = useState();
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
-  const [items]: any = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
-  );
+  // 장바구니 데이터 불러오기
+  const cart = useSelector((state: any) => state.cart.value);
+  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
   const [customerInput, setCustomerInput] = useState({
@@ -47,9 +49,14 @@ const Checkout = (props: any) => {
     message: "",
   });
 
+  // store의 cart 변경이 일어날 때마다 myCart 업데이트
+  useEffect(() => {
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+  }, [cart]);
+
   // 비로그인 시 로그인 화면으로 보내기
   useEffect(() => {
-    if (!loginSession) {
+    if (Object.keys(loginSession).length === 0) {
       alert("로그인 후 결제를 진행해주세요.");
       navigate(`${rootPath}login`);
     }
@@ -67,20 +74,19 @@ const Checkout = (props: any) => {
 
     // 결제 금액 구하기
     let total = 0;
-    items &&
-      items.map((item: ItemModel) => {
-        if (item.discountedPrice) {
-          total += +item.discountedPrice * +item.quantity;
-        } else if (item.price) {
-          total += +item.price * +item.quantity;
-        }
-      });
+    myCart.map((item: ItemModel) => {
+      if (item.discountedPrice) {
+        total += +item.discountedPrice * +item.quantity;
+      } else if (item.price) {
+        total += +item.price * +item.quantity;
+      }
+    });
     setSum(total);
     setPrice(total);
     setOriginPrice(total);
 
     fetchPaymentWidget();
-  }, []);
+  }, [myCart]);
 
   useEffect(() => {
     if (paymentWidget == null) {
@@ -156,7 +162,7 @@ const Checkout = (props: any) => {
     try {
       await paymentWidget?.requestPayment({
         orderId: orderId,
-        orderName: `${items[0].name}${items.length > 1 && ` 외 ${items.length - 1}건`}`,
+        orderName: `${myCart.length !== myCart[0].name}${myCart.length > 1 && ` 외 ${myCart.length - 1}건`}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,
         customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,

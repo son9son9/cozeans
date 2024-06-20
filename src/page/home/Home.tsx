@@ -9,11 +9,11 @@ import sample2 from "../../assets/sample2.png";
 import sample3 from "../../assets/sample3.png";
 import sample4 from "../../assets/sample4.png";
 import { Link } from "react-router-dom";
-import { dataSample } from "../../dataSample";
 import { sortByNew } from "../../common";
 import Modal from "../../component/modal/Modal";
 import ringing from "../../assets/ringing.png";
 import { rootPath } from "../../config";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const marqueeRef: any = useRef();
@@ -22,10 +22,9 @@ const Home = () => {
   const [numOfElement, setNumOfElement] = useState(0);
   const [circulateBannerFlag, setCirculateBannerFlag] = useState(1);
   const [beltText, setBeltText] = useState();
-  const [newArrivalList] = useState(() => {
-    const arr = [...dataSample];
-    return sortByNew(arr).slice(0, 5);
-  });
+  const items = useSelector((state: any) => state.items.value);
+  // useSelector로 받아온 데이터는 read only, 따라서 값 복사해서 변경해야 함.
+  const [newArrivalList] = useState(() => sortByNew([...items]).slice(0, 5));
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [newslettersEmail, setNewslettersEmail]: any = useState();
 
@@ -110,8 +109,8 @@ const Home = () => {
           </Link>
         </div>
         <div className={styles.cardbox}>
-          {newArrivalList.map((item, index) => (
-            <ProductCard data={item} key={index} />
+          {newArrivalList.map((item) => (
+            <ProductCard data={item} key={item.id} />
           ))}
         </div>
       </section>

@@ -1,5 +1,5 @@
 import { formatNumberToCurrency } from "../../common";
-import styles from "./PriceDisplayer.module.scss";
+import "./PriceDisplayer.module.scss";
 
 const PriceDisplayer = (props: any) => {
   if (props.item.discountedPrice) {

@@ -1,4 +1,4 @@
-export type OrderInfo = {
+export type OrderInfoModel = {
   orderId: string;
   amount: number;
   orderDate: number;

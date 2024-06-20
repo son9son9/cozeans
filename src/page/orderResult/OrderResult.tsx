@@ -7,17 +7,18 @@ import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { Link } from "react-router-dom";
 import { ItemModel } from "../../models/ItemModel";
+import { useSelector } from "react-redux";
 
 const OrderResult = (props: any) => {
-  const loginSession = props.loginSession && JSON.parse(props.loginSession);
+  const loginSession = useSelector((state: any) => state.loginSession.value);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
   const paymentKey = searchParams.get("paymentKey");
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
-  const [cart] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
-  );
+  // 장바구니 데이터 불러오기
+  const cart = useSelector((state: any) => state.cart.value);
+  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
   let orderHistory: any = localStorage.getItem("cozeans-order-info");
   orderHistory = orderHistory && JSON.parse(orderHistory);
   const currentOrder = orderHistory && orderHistory[orderHistory.length - 1];
@@ -30,6 +31,11 @@ const OrderResult = (props: any) => {
       date.getSeconds() > 9 ? date.getSeconds() : "0" + date.getSeconds().toString()
     }`;
   };
+
+  // store의 cart 변경이 일어날 때마다 myCart 업데이트
+  useEffect(() => {
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+  }, [cart]);
 
   useEffect(() => {
     let arr;
@@ -54,10 +60,10 @@ const OrderResult = (props: any) => {
           <h3>주문 정보</h3>
           <div className={styles["info"]}>
             <div className={styles["info-row"]}>
-              <img src={cart[0].thumbnail} className={styles.thumbnail} />
+              <img src={myCart.length > 0 && myCart[0].thumbnail} className={styles.thumbnail} />
               <p>
-                {cart[0].name}
-                {cart.length > 1 && ` 외 ${cart.length - 1}건`}
+                {myCart.length > 0 && myCart[0].name}
+                {myCart.length > 1 && ` 외 ${myCart.length - 1}건`}
               </p>
             </div>
             <div className={styles["info-row"]}>

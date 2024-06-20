@@ -5,15 +5,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
+import { useDispatch, useSelector } from "react-redux";
+import { cartActions } from "../../store";
 
-const Details = (props: any) => {
-  let isThereSameThingInCart = false;
-  const loginSession = props.loginSession && JSON.parse(props.loginSession);
+const Details = () => {
+  let isThereSameItemInCart = false;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loginSession = useSelector((state: any) => state.loginSession.value);
   const location = useLocation();
-  const [itemInfo] = useState(location.state.item);
-  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...itemInfo, user: loginSession?.id || "" });
-  // const [checkoutClick, setCheckoutClick] = useState(false);
+  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...location.state.item, user: loginSession?.id || "" });
+  // 장바구니 데이터 불러오기
+  const cart = useSelector((state: any) => state.cart.value);
+  const [myCart, setMyCart] = useState([]);
+  // store의 cart 변경이 일어날 때마다 myCart 업데이트
+  useEffect(() => {
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+  }, [cart]);
 
   // 장바구니 아이템 추가
   const addToCartHandler = (target: any) => {
@@ -27,18 +35,9 @@ const Details = (props: any) => {
       return false;
     }
 
-    // 로컬스토리지의 카트 데이터를 가져오기
-    const currentCart = () => {
-      const cartStorage = props.cartData;
-      // 카트에 값이 있을 때만 parse
-      if (!cartStorage) {
-        return "";
-      } else return JSON.parse(cartStorage);
-    };
-
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
-    props.cartData &&
-      JSON.parse(props.cartData)?.map((item: ItemModel) => {
+    myCart.length > 0 &&
+      myCart?.map((item: ItemModel) => {
         // stringify()로 두 객체 비교
         if (
           item.id === selectedItemInfo.id &&
@@ -46,11 +45,11 @@ const Details = (props: any) => {
           item.size === selectedItemInfo.size &&
           item.user === selectedItemInfo.user
         )
-          isThereSameThingInCart = true;
+          isThereSameItemInCart = true;
       });
 
     // 장바구니에 동일 상품이 있을 때
-    if (isThereSameThingInCart) {
+    if (isThereSameItemInCart) {
       if (target === "CHECKOUT") {
         // Checkout 클릭 시 장바구니에 추가하지 않고 카트 페이지로 이동
         navigate(`${rootPath}cart`);
@@ -77,11 +76,12 @@ const Details = (props: any) => {
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
     // quantity 한개 추가
     // user 키 추가
-    let copy = [
-      ...currentCart(),
-      { ...selectedItemInfo, quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1, user: loginSession?.id || "" },
-    ];
-    props.setCartData(JSON.stringify(copy));
+    const newCartInfo = {
+      ...selectedItemInfo,
+      quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1,
+      user: loginSession?.id || "",
+    };
+    dispatch(cartActions.addItem(newCartInfo));
   };
 
   const onCheckoutHandler = (e: any) => {
@@ -98,7 +98,7 @@ const Details = (props: any) => {
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.looks}>
-        <img src={itemInfo.thumbnail} alt="thumbnail" />
+        <img src={selectedItemInfo.thumbnail} alt="thumbnail" />
         <h3>Sample images for assortment</h3>
         <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06885.jpg`} alt="image1" />
         <img src={`https://hififnk.kr/web/upload/NNEditor/20240505/DSC06889.jpg`} alt="image2" />
@@ -117,9 +117,9 @@ const Details = (props: any) => {
       </div>
       <div className={styles.explanation}>
         <div className={styles["title-box"]}>
-          <h3 className={styles.title}>{itemInfo.name}</h3>
+          <h3 className={styles.title}>{selectedItemInfo.name}</h3>
           <div className={styles["price bold"]}>
-            <PriceDisplayer item={itemInfo} />
+            <PriceDisplayer item={selectedItemInfo} />
           </div>
         </div>
         <div className={styles.content}>

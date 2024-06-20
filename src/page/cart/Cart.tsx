@@ -6,22 +6,26 @@ import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
+import { useDispatch, useSelector } from "react-redux";
+import { cartActions } from "../../store";
 
-const Cart = (props: any) => {
-  const loginSession = props.loginSession && JSON.parse(props.loginSession);
-  // 로컬스토리지 장바구니 데이터 불러오기
-  const [items, setItems] = useState(
-    props.cartData && JSON.parse(props.cartData).filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id))
-  );
+const Cart = () => {
+  const dispatch = useDispatch();
+  const loginSession = useSelector((state: any) => state.loginSession.value);
   const [sum, setSum] = useState(0);
+  // 장바구니 데이터 불러오기
+  const cart = useSelector((state: any) => state.cart.value);
+  const [myCart, setMyCart] = useState([]);
+  // store의 cart 변경이 일어날 때마다 myCart 업데이트
+  useEffect(() => {
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+  }, [cart]);
 
   const onCloseHandler = (i: number) => {
     if (confirm("장바구니에서 삭제하시겠습니까?")) {
-      const arr = items;
-      arr.splice(i, 1);
-      props.setCartData(JSON.stringify(arr));
+      dispatch(cartActions.removeItem(i));
       // 엘리먼트 리렌더링 이슈 미해결, 따라서 일단 페이지 리로드로 대체
-      window.location.reload();
+      // window.location.reload();
     } else {
       return false;
     }
@@ -29,19 +33,18 @@ const Cart = (props: any) => {
 
   useEffect(() => {
     let total = 0;
-    items &&
-      items.map((item: ItemModel) => {
-        if (item.discountedPrice) {
-          total += +item.discountedPrice * +item.quantity;
-        } else if (item.price) {
-          total += +item.price * +item.quantity;
-        }
-      });
+    myCart.map((item: ItemModel) => {
+      if (item.discountedPrice) {
+        total += +item.discountedPrice * +item.quantity;
+      } else if (item.price) {
+        total += +item.price * +item.quantity;
+      }
+    });
     setSum(total);
-  }, [items, sum]);
+  }, [myCart, sum]);
 
   // cartStorage가 비어있을 땐 비어있음 컴포넌트 반환
-  if (!items || items.length === 0) {
+  if (!myCart || myCart.length === 0) {
     return (
       <div className={`${styles.container} animate-after-render`} style={{ justifyContent: "center" }}>
         <div>
@@ -55,7 +58,7 @@ const Cart = (props: any) => {
       <h3 className={styles.title}>Your Cart</h3>
       <div className={styles.list}>
         {/* 아이템 리스트 배열 */}
-        {items.map((item: ItemModel, index: number) => (
+        {myCart.map((item: ItemModel, index: number) => (
           <div className={styles.item} key={index}>
             <div className={styles["img-info-wrapper"]}>
               <img src={item.thumbnail} alt="Item Image" />
@@ -65,10 +68,7 @@ const Cart = (props: any) => {
                 <div className={styles["quantity-box"]}>
                   <button
                     onClick={() => {
-                      const arr = [...items];
-                      if (arr[index].quantity > 1) arr[index].quantity--;
-                      setItems(arr);
-                      props.setCartData(JSON.stringify(arr));
+                      dispatch(cartActions.decreaseQuantity(index));
                     }}
                   >
                     ﹣
@@ -76,10 +76,7 @@ const Cart = (props: any) => {
                   <span>{item.quantity}</span>
                   <button
                     onClick={() => {
-                      const arr = [...items];
-                      if (arr[index].quantity < 99) arr[index].quantity++;
-                      setItems(arr);
-                      props.setCartData(JSON.stringify(arr));
+                      dispatch(cartActions.increaseQuantity(index));
                     }}
                   >
                     ﹢

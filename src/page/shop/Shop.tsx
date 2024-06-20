@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { dataSample } from "../../dataSample";
 import { useState } from "react";
 import { sortByNew } from "../../common";
-import { useEffect } from "react";
+
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 
@@ -18,7 +18,7 @@ const sliceList = (list: Array<ItemModel>, chunkUnit: number): any => {
   return arr;
 };
 
-const Shop = (props: any) => {
+const Shop = () => {
   const { page } = useParams();
   const [currentPage, setCurrentPage] = useState(Number(page));
   const [sortMode, setSortMode] = useState("new");
@@ -78,8 +78,6 @@ const Shop = (props: any) => {
     setSortMode(mode);
     setChunkedList(sliceList(arr, chunkUnit));
   };
-
-  useEffect(() => {}, []);
 
   return (
     <div className={`${styles.container} animate-after-render`}>

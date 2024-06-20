@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../component/modal/Modal";
 import { rootPath } from "../../config";
+import { useSelector } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -11,6 +12,14 @@ const SignUp = () => {
   const [nameInput, setNameInput] = useState("");
   const [pwCheckInput, setPwCheckInput] = useState("");
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const loginSession = useSelector((state: any) => state.loginSession.value);
+
+  useEffect(() => {
+    if (Object.keys(loginSession).length !== 0) {
+      alert("이미 로그인 상태입니다.");
+      navigate(`${rootPath}`);
+    }
+  }, []);
 
   const signUpHandler = () => {
     // input 입력 여부 검사
