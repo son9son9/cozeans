@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { formatNumberToCurrency } from "../../common";
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
-import { OrderInfo } from "../../models/OrderInfoModel";
+import { OrderInfoModel } from "../../models/OrderInfoModel";
 import { useSelector } from "react-redux";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
@@ -144,7 +144,7 @@ const Checkout = (props: any) => {
     let orderHistory = localStorage.getItem("cozeans-order-info");
     orderHistory = orderHistory && JSON.parse(orderHistory);
     // localStorage에 결제정보 저장
-    const orderInfo: OrderInfo = {
+    const orderInfo: OrderInfoModel = {
       orderId: orderId,
       customerInfo: customerInput,
       amount: price,

@@ -1,6 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { AccountModel } from "../models/AccountModel";
-import { dataSample } from "../dataSample";
 import storage from "redux-persist/lib/storage";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
@@ -92,8 +91,12 @@ const loginSessionSlice = createSlice({
 // 상품 목록
 const itemsSlice = createSlice({
   name: "items",
-  initialState: { value: dataSample },
-  reducers: {},
+  initialState: { value: [] },
+  reducers: {
+    getItems: (state: any, action) => {
+      state.value = action.payload;
+    },
+  },
 });
 
 // Configure Store

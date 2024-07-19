@@ -13,7 +13,10 @@ import { sortByNew } from "../../common";
 import Modal from "../../component/modal/Modal";
 import ringing from "../../assets/ringing.png";
 import { rootPath } from "../../config";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { ItemModel } from "../../models/ItemModel";
+// import { itemsActions } from "../../store";
 
 const Home = () => {
   const marqueeRef: any = useRef();
@@ -24,9 +27,16 @@ const Home = () => {
   const [beltText, setBeltText] = useState();
   const items = useSelector((state: any) => state.items.value);
   // useSelector로 받아온 데이터는 read only, 따라서 값 복사해서 변경해야 함.
-  const [newArrivalList] = useState(() => sortByNew([...items]).slice(0, 5));
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [newslettersEmail, setNewslettersEmail]: any = useState();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["hypedItems"],
+    queryFn: async () => {
+      return await fetch("http://52.78.179.19:8080/items").then((res) => res.json());
+    },
+    select: (data: ItemModel[]) => sortByNew([...data].slice(0, 5)),
+  });
 
   const toggleFollowModal = () => {
     if (!newslettersEmail) {
@@ -109,9 +119,8 @@ const Home = () => {
           </Link>
         </div>
         <div className={styles.cardbox}>
-          {newArrivalList.map((item) => (
-            <ProductCard data={item} key={item.id} />
-          ))}
+          {isPending && <div>is Loading...</div>}
+          {data && data.map((item: ItemModel) => <ProductCard data={item} key={item.id} />)}
         </div>
       </section>
       <section className={styles["brand-explain"]}>

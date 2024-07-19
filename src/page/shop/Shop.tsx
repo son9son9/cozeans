@@ -3,82 +3,73 @@ import styles from "./Shop.module.scss";
 import ProductCard from "../../component/productCard/ProductCard";
 import { Link, useParams } from "react-router-dom";
 import { dataSample } from "../../dataSample";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { sortByNew } from "../../common";
-
 import { rootPath } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
+import { useQuery } from "@tanstack/react-query";
 
 // chunkUnit만큼 itemList를 잘라 chunkedList에 저장
-const sliceList = (list: Array<ItemModel>, chunkUnit: number): any => {
+const separateItems = (items: Array<ItemModel>, itemsPerPage: number): any => {
   let arr = [];
-  for (let i = 0; i < list.length; i += chunkUnit) {
-    arr.push(list.slice(i, i + chunkUnit));
+  for (let i = 0; i < items.length; i += itemsPerPage) {
+    arr.push(items.slice(i, i + itemsPerPage));
   }
   return arr;
+};
+// 할인 중이면 할인가 반환, 아니면 정가 반환하는 함수
+const decidedPrice = (item: ItemModel) => {
+  if (item.discountedPrice) return item.discountedPrice;
+  else return item.price;
 };
 
 const Shop = () => {
   const { page } = useParams();
+  const itemsPerPage = 8; // 리스트 목록 개수 단위 설정
   const [currentPage, setCurrentPage] = useState(Number(page));
   const [sortMode, setSortMode] = useState("new");
-  const [itemList, setItemList] = useState(() => {
-    const arr = [...dataSample];
-    return sortByNew(arr);
+  const [itemList, setItemList] = useState<ItemModel[]>([]);
+  const { isPending, error, data } = useQuery({
+    queryKey: ["items"],
+    queryFn: () => {
+      return fetch("http://52.78.179.19:8080/items").then((res) => res.json());
+    },
   });
-  const [chunkUnit] = useState(8); // 리스트 목록 개수 단위 설정
-  const [chunkedList, setChunkedList]: any = useState(sliceList(itemList, chunkUnit));
 
-  // 할인 중이면 할인가 반환, 아니면 정가 반환하는 함수
-  const decidedPrice = (item: ItemModel) => {
-    if (item.discountedPrice) return item.discountedPrice;
-    else return item.price;
-  };
+  const sortedItems = useMemo(() => {
+    if (!itemList.length) return [];
+    const arr = [...itemList];
 
-  const handleUpdate = (mode: string) => {
-    const arr = [...dataSample];
-
-    if (mode === "new") {
-      setItemList(sortByNew(arr));
-      // 가격 내림차순 정렬
-    } else if (mode === "price-desc") {
-      setItemList(
-        arr.sort((a, b) => {
-          if (decidedPrice(a) > decidedPrice(b)) {
-            return -1;
-          } else if (decidedPrice(a) < decidedPrice(b)) {
-            return 1;
-          } else return 0;
-        })
-      );
-      // 가격 오름차순 정렬
-    } else if (mode === "price-asc") {
-      setItemList(
-        arr.sort((a, b) => {
-          if (decidedPrice(a) < decidedPrice(b)) {
-            return -1;
-          } else if (decidedPrice(a) > decidedPrice(b)) {
-            return 1;
-          } else return 0;
-        })
-      );
-      // 이름 오름차순 정렬
-    } else if (mode === "name-asc") {
-      setItemList(
-        arr.sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          } else return 0;
-        })
-      );
+    if (sortMode === "new") {
+      return sortByNew(arr);
+    } else if (sortMode === "price-desc") {
+      return arr.sort((a, b) => decidedPrice(b) - decidedPrice(a));
+    } else if (sortMode === "price-asc") {
+      return arr.sort((a, b) => decidedPrice(a) - decidedPrice(b));
+    } else if (sortMode === "name-asc") {
+      return arr.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    return arr;
+  }, [itemList, sortMode]);
+
+  const separatedItems = useMemo(() => {
+    if (!data) return [];
+    return separateItems(sortedItems, itemsPerPage);
+  }, [sortedItems]);
+
+  const handleUpdate = (mode: string): void => {
     setSortMode(mode);
-    setChunkedList(sliceList(arr, chunkUnit));
   };
 
+  useEffect(() => {
+    if (data) {
+      setItemList(data);
+    }
+  }, [data]);
+
+  if (isPending) return <div className={`${styles.container} animate-after-render`}>Loading...</div>;
+  if (error) return <div className={`${styles.container} animate-after-render`}>An error has occured: {error.message}</div>;
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles["product-list-wrapper"]}>
@@ -112,7 +103,7 @@ const Shop = () => {
           </div>
         </div>
         <div className={styles["product-list"]}>
-          {chunkedList[currentPage - 1].map((item: ItemModel, index: number) => (
+          {separatedItems[currentPage - 1]?.map((item: ItemModel, index: number) => (
             <ProductCard data={item} key={index} />
           ))}
         </div>
@@ -123,7 +114,7 @@ const Shop = () => {
           >
             &lt;
           </Link>
-          {chunkedList.map((element: ItemModel, index: number) => (
+          {separatedItems?.map((element: ItemModel, index: number) => (
             <Link
               to={`${rootPath}shop/${(index + 1).toString()}`}
               className={currentPage === index + 1 ? styles.emphasis : ""}
@@ -134,8 +125,8 @@ const Shop = () => {
             </Link>
           ))}
           <Link
-            to={currentPage === chunkedList.length ? `${rootPath}shop/${chunkedList.length}` : `${rootPath}shop/${(currentPage + 1).toString()}`}
-            onClick={() => (currentPage === chunkedList.length ? false : setCurrentPage(currentPage + 1))}
+            to={currentPage === separatedItems.length ? `${rootPath}shop/${separatedItems.length}` : `${rootPath}shop/${(currentPage + 1).toString()}`}
+            onClick={() => (currentPage === separatedItems.length ? false : setCurrentPage(currentPage + 1))}
           >
             &gt;
           </Link>
