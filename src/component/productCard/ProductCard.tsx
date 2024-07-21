@@ -7,19 +7,26 @@ import PriceDisplayer from "../priceDisplayer/PriceDisplayer";
 import { rootPath } from "../../config";
 
 const ProductCard = (props: any) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = props.data.thumbnail;
+    img.onload = () => setIsLoading(false);
+    img.onerror = () => setHasError(true);
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, []);
 
   return (
     <div className={styles.card}>
       <Link to={`${rootPath}details/${props.data.id.toString()}`} state={{ item: props.data }}>
         <div className={styles.imagebox}>
-          {isLoading ? (
-            <div className={styles.loader}>
-              <h2>Loading...</h2>
-            </div>
-          ) : (
-            <img src={props.data.thumbnail} alt="Product Image" />
-          )}
+          {isLoading ? <div className="loader"></div> : <img src={props.data.thumbnail} alt="Product Image" loading="lazy" />}
         </div>
       </Link>
       <div className={styles["product-textbox"]}>
