@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../component/modal/Modal";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 import { useSelector } from "react-redux";
 
 const SignUp = () => {
@@ -17,7 +17,7 @@ const SignUp = () => {
   useEffect(() => {
     if (Object.keys(loginSession).length !== 0) {
       alert("이미 로그인 상태입니다.");
-      navigate(`${rootPath}`);
+      navigate(`${ROOT_PATH}`);
     }
   }, []);
 
@@ -68,7 +68,7 @@ const SignUp = () => {
   };
 
   const completeModalButtonHandler = () => {
-    navigate(`${rootPath}login`);
+    navigate(`${ROOT_PATH}login`);
   };
 
   return (

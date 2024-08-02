@@ -1,5 +1,4 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { AccountModel } from "../models/AccountModel";
 import storage from "redux-persist/lib/storage";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
@@ -39,6 +38,8 @@ const persistedCartReducer = persistReducer(
   {
     key: "cart",
     storage,
+    // serialize: (data: any) => JSON.stringify(data),
+    // deserialize: (data: any) => JSON.parse(data),
   },
   cartSlice.reducer
 );
@@ -52,22 +53,6 @@ const orderHistorySlice = createSlice({
     // 주문 정보 추가
     recordOrder: (state: any, action) => {
       state.value.push(action.payload.data);
-    },
-  },
-});
-
-// Account Info
-const accountInfoSlice = createSlice({
-  name: "accountInfo",
-  initialState: { value: [{ id: "admin", password: "1234", name: "관리자" }] },
-  reducers: {
-    // 회원가입 시 계정 추가
-    addAccount: (state: any, action) => {
-      state.value = action.payload;
-    },
-    // 계정 삭제
-    removeAccount: (state: any, action) => {
-      state.value.filter((obj: AccountModel) => obj["id"] !== action.payload.id);
     },
   },
 });
@@ -88,6 +73,17 @@ const loginSessionSlice = createSlice({
   },
 });
 
+// Persisted cart reducer
+const persistedSessionReducer = persistReducer(
+  {
+    key: "loginSession",
+    storage,
+    // serialize: (data: any) => JSON.stringify(data),
+    // deserialize: (data: any) => JSON.parse(data),
+  },
+  loginSessionSlice.reducer
+);
+
 // 상품 목록
 const itemsSlice = createSlice({
   name: "items",
@@ -104,8 +100,7 @@ const store = configureStore({
   reducer: {
     cart: persistedCartReducer,
     orderHistory: orderHistorySlice.reducer,
-    accountInfo: accountInfoSlice.reducer,
-    loginSession: loginSessionSlice.reducer,
+    loginSession: persistedSessionReducer,
     items: itemsSlice.reducer,
   },
 });
@@ -115,7 +110,6 @@ export const persistor = persistStore(store);
 
 export const cartActions = cartSlice.actions;
 export const orderHistoryActions = orderHistorySlice.actions;
-export const accountInfoActions = accountInfoSlice.actions;
 export const loginSessionActions = loginSessionSlice.actions;
 export const itemsActions = itemsSlice.actions;
 

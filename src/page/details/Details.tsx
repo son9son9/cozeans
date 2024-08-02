@@ -3,7 +3,7 @@ import "../../App.css";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../store";
@@ -14,13 +14,13 @@ const Details = () => {
   const navigate = useNavigate();
   const loginSession = useSelector((state: any) => state.loginSession.value);
   const location = useLocation();
-  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...location.state.item, user: loginSession?.id || "" });
+  const [selectedItemInfo, setSelectedItemInfo] = useState({ ...location.state.item, user: loginSession?.userId || "" });
   // 장바구니 데이터 불러오기
   const cart = useSelector((state: any) => state.cart.value);
   const [myCart, setMyCart] = useState([]);
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
   }, [cart]);
 
   // 장바구니 아이템 추가
@@ -52,7 +52,7 @@ const Details = () => {
     if (isThereSameItemInCart) {
       if (target === "CHECKOUT") {
         // Checkout 클릭 시 장바구니에 추가하지 않고 카트 페이지로 이동
-        navigate(`${rootPath}cart`);
+        navigate(`${ROOT_PATH}cart`);
         return;
       } else {
         // 장바구니 추가 클릭 시 alert
@@ -62,13 +62,13 @@ const Details = () => {
     }
     // CHECKOUT 클릭 시 장바구니에 물품 추가하고 cart 페이지로 바로 이동
     if (target === "CHECKOUT") {
-      navigate(`${rootPath}cart`);
+      navigate(`${ROOT_PATH}cart`);
     }
 
     // 비로그인 확인창
     if (!loginSession) {
       if (confirm("현재 비로그인 상태입니다. 로그인하시겠습니까?")) {
-        navigate(`${rootPath}login`);
+        navigate(`${ROOT_PATH}login`);
         return;
       }
     }
@@ -79,7 +79,7 @@ const Details = () => {
     const newCartInfo = {
       ...selectedItemInfo,
       quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1,
-      user: loginSession?.id || "",
+      user: loginSession?.userId || "",
     };
     dispatch(cartActions.addItem(newCartInfo));
   };

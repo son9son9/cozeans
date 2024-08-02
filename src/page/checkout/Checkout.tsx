@@ -6,10 +6,11 @@ import Modal from "../../component/modal/Modal";
 import DaumPostCode from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import { formatNumberToCurrency } from "../../common";
-import { rootPath } from "../../config";
+import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { OrderInfoModel } from "../../models/OrderInfoModel";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
@@ -33,8 +34,9 @@ const Checkout = (props: any) => {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   // 장바구니 데이터 불러오기
   const cart = useSelector((state: any) => state.cart.value);
-  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
-
+  const [myCart, setMyCart] = useState(
+    cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId))
+  );
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
   const [customerInput, setCustomerInput] = useState({
@@ -48,17 +50,24 @@ const Checkout = (props: any) => {
     email: "",
     message: "",
   });
+  const sessionQuery = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`).then((res) => res.json());
+    },
+    enabled: false,
+  });
 
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
   }, [cart]);
 
   // 비로그인 시 로그인 화면으로 보내기
   useEffect(() => {
     if (Object.keys(loginSession).length === 0) {
       alert("로그인 후 결제를 진행해주세요.");
-      navigate(`${rootPath}login`);
+      navigate(`${ROOT_PATH}login`);
     }
   }, []);
 
@@ -116,6 +125,11 @@ const Checkout = (props: any) => {
   }, [addressData]);
 
   const handlePaymentRequest = async () => {
+    // login session 검사
+    if (!(await sessionQuery.refetch().then((res) => res.data.success))) {
+      alert("로그인 세션이 유효하지 않습니다.");
+      return false;
+    }
     // input 검사
     if (!customerInput.name) {
       alert("이름을 입력하세요.");
@@ -166,8 +180,8 @@ const Checkout = (props: any) => {
         customerName: customerInput.name,
         customerEmail: customerInput.email,
         customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
-        successUrl: `${window.location.origin}${rootPath}order-success`,
-        failUrl: `${window.location.origin}${rootPath}order-fail`,
+        successUrl: `${window.location.origin}${ROOT_PATH}order-success`,
+        failUrl: `${window.location.origin}${ROOT_PATH}order-fail`,
       });
     } catch (error) {
       console.error("Error requesting payment:", error);

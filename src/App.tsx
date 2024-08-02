@@ -12,7 +12,7 @@ import Checkout from "./page/checkout/Checkout";
 import OrderResult from "./page/orderResult/OrderResult";
 import SignUp from "./page/signUp/SignUp";
 // import FindAccount from "./page/findAccount/FindAccount";
-import { rootPath } from "./config";
+import { ROOT_PATH } from "./config";
 
 function App() {
   const { pathname } = useLocation();
@@ -26,18 +26,18 @@ function App() {
     <Suspense fallback={<></>}>
       <Header />
       <Routes>
-        <Route path={`/`} element={<Navigate replace to={`${rootPath}`} />} />
-        <Route path={`${rootPath}`} element={<Home />} />
-        <Route path={`${rootPath}shop`} element={<Navigate replace to={`${rootPath}shop/1`} />} />
-        <Route path={`${rootPath}shop/:page`} element={<Shop />} />
-        <Route path={`${rootPath}login`} element={<Login />} />
-        <Route path={`${rootPath}sign-up`} element={<SignUp />} />
-        {/* <Route path={`${rootPath}find-account`} element={<FindAccount />} /> */}
-        <Route path={`${rootPath}cart`} element={<Cart />} />
-        <Route path={`${rootPath}details/:id`} element={<Details />} />
-        <Route path={`${rootPath}checkout`} element={<Checkout />} />
-        <Route path={`${rootPath}order-success`} element={<OrderResult isSucceed={true} />} />
-        <Route path={`${rootPath}order-fail`} element={<OrderResult isSucceed={false} />} />
+        <Route path={`/`} element={<Navigate replace to={`${ROOT_PATH}`} />} />
+        <Route path={`${ROOT_PATH}`} element={<Home />} />
+        <Route path={`${ROOT_PATH}shop`} element={<Navigate replace to={`${ROOT_PATH}shop/1`} />} />
+        <Route path={`${ROOT_PATH}shop/:page`} element={<Shop />} />
+        <Route path={`${ROOT_PATH}login`} element={<Login />} />
+        <Route path={`${ROOT_PATH}sign-up`} element={<SignUp />} />
+        {/* <Route path={`${ROOT_PATH}find-account`} element={<FindAccount />} /> */}
+        <Route path={`${ROOT_PATH}cart`} element={<Cart />} />
+        <Route path={`${ROOT_PATH}details/:id`} element={<Details />} />
+        <Route path={`${ROOT_PATH}checkout`} element={<Checkout />} />
+        <Route path={`${ROOT_PATH}order-success`} element={<OrderResult isSucceed={true} />} />
+        <Route path={`${ROOT_PATH}order-fail`} element={<OrderResult isSucceed={false} />} />
       </Routes>
       <Footer />
     </Suspense>

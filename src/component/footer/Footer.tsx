@@ -3,14 +3,14 @@ import styles from "./Footer.module.scss";
 import cozeansLogo from "../../assets/cozeans.svg";
 import githubLogo from "../../assets/github.svg";
 import { Link } from "react-router-dom";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 
 const Footer = () => {
   return (
     <div className={`${styles.container} animate-after-render`}>
       <footer>
         <div className={styles.logo}>
-          <Link to={rootPath}>
+          <Link to={ROOT_PATH}>
             <img src={cozeansLogo} width={120} alt="Cozeans Logo" />
           </Link>
           <p>

@@ -4,7 +4,7 @@ import styles from "./OrderResult.module.scss";
 import { useState } from "react";
 import { useEffect } from "react";
 import { formatNumberToCurrency } from "../../common";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 import { Link } from "react-router-dom";
 import { ItemModel } from "../../models/ItemModel";
 import { useSelector } from "react-redux";
@@ -18,7 +18,9 @@ const OrderResult = (props: any) => {
   const amount = searchParams.get("amount");
   // 장바구니 데이터 불러오기
   const cart = useSelector((state: any) => state.cart.value);
-  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+  const [myCart, setMyCart] = useState(
+    cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId))
+  );
   let orderHistory: any = localStorage.getItem("cozeans-order-info");
   orderHistory = orderHistory && JSON.parse(orderHistory);
   const currentOrder = orderHistory && orderHistory[orderHistory.length - 1];
@@ -34,7 +36,7 @@ const OrderResult = (props: any) => {
 
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
   }, [cart]);
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const OrderResult = (props: any) => {
             Please check your order again.
           </h2>
           <button>
-            <Link to={`${rootPath}`}>BACK TO HOME</Link>
+            <Link to={`${ROOT_PATH}`}>BACK TO HOME</Link>
           </button>
         </div>
       </div>

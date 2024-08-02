@@ -12,13 +12,15 @@ import { Link } from "react-router-dom";
 import { sortByNew } from "../../common";
 import Modal from "../../component/modal/Modal";
 import ringing from "../../assets/ringing.png";
-import { rootPath } from "../../config";
+import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { useSelector, useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { ItemModel } from "../../models/ItemModel";
-// import { itemsActions } from "../../store";
+import { LoginSessionModel } from "../../models/LoginSessionModel";
+import { loginSessionActions } from "../../store";
 
 const Home = () => {
+  const loginSession: LoginSessionModel = useSelector((state: any) => state.loginSession.value);
   const marqueeRef: any = useRef();
   const [vpWidth, setVpWidth]: any = useState();
   const [offsetWidth, setOffsetWidth] = useState();
@@ -29,14 +31,7 @@ const Home = () => {
   // useSelector로 받아온 데이터는 read only, 따라서 값 복사해서 변경해야 함.
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [newslettersEmail, setNewslettersEmail]: any = useState();
-
-  const { isPending, error, data } = useQuery({
-    queryKey: ["hypedItems"],
-    queryFn: async () => {
-      return await fetch("http://52.78.179.19:8080/items").then((res) => res.json());
-    },
-    select: (data: ItemModel[]) => sortByNew([...data].slice(0, 5)),
-  });
+  const dispatch = useDispatch();
 
   const toggleFollowModal = () => {
     if (!newslettersEmail) {
@@ -45,10 +40,41 @@ const Home = () => {
     setIsFollowModalOpen(!isFollowModalOpen);
   };
 
+  const { isPending, error, data } = useQuery({
+    queryKey: ["hypedItems"],
+    queryFn: async () => {
+      return await fetch(`${SERVER_PATH}items`).then((res) => res.json());
+    },
+    select: (data: ItemModel[]) => sortByNew([...data].slice(0, 5)),
+    retry: false,
+  });
+
+  const sessionQuery = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`).then((res) => res.json());
+    },
+    retry: false,
+    enabled: false,
+  });
+  // 메인 페이지에서 현재 로그인된 세션 체크,
+  // 비로그인 상태 시 persist 상태 로그아웃으로 변경
+  useEffect(() => {
+    setTimeout(() => {
+      sessionQuery.refetch().then((res) => {
+        if (res.data) {
+          if (res.data.success === false) {
+            dispatch(loginSessionActions.logout());
+          }
+        }
+      });
+    }, 500);
+  }, [sessionQuery.data]);
+
   // 배너 무한 스크롤 텍스트 복제
   useEffect(() => {
     // 뷰포트, 전광판 텍스트 길이 구하기
-    setVpWidth(document.documentElement.clientWidth as any);
+    setVpWidth(document.documentElement.clientWidth);
     setOffsetWidth(marqueeRef.current.offsetWidth);
 
     // 복제할 텍스트 개수 구하기
@@ -81,12 +107,7 @@ const Home = () => {
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}>
-          <div
-            className={styles["banner-img-wrapper"]}
-            // onClick={() => {
-            //   setCirculateBannerFlag(circulateBannerFlag === 1 ? 2 : 1);
-            // }}
-          >
+          <div className={styles["banner-img-wrapper"]}>
             <img
               src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe3041c88/Jungkook/Denim%20Page%20Update%20desktop.jpg"
               className={circulateBannerFlag === 1 ? styles.hype : ""}
@@ -98,7 +119,7 @@ const Home = () => {
             <div className={styles.bannertext}>
               <h2>Brand new trends in Cozeans</h2>
               <p>Let&apos;s check it out !</p>
-              <Link to={`${rootPath}shop`}>
+              <Link to={`${ROOT_PATH}shop`}>
                 <button>NEW ARRIVALS</button>
               </Link>
             </div>
@@ -114,7 +135,7 @@ const Home = () => {
       <section className={styles["pic-list"]}>
         <div className={styles.subtitle}>
           <h2 className="judson-bold">NEW IN</h2>
-          <Link to={`${rootPath}shop`}>
+          <Link to={`${ROOT_PATH}shop`}>
             <button className="judson-regular">MORE &gt;</button>
           </Link>
         </div>
@@ -158,7 +179,7 @@ const Home = () => {
             while maintaining a comfortable silhouette.
           </p>
           <button>
-            <Link to={`${rootPath}shop`}>BUY OUR JEANS</Link>
+            <Link to={`${ROOT_PATH}shop`}>BUY OUR JEANS</Link>
           </button>
         </div>
       </section>

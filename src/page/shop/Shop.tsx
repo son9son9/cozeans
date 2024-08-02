@@ -4,7 +4,7 @@ import ProductCard from "../../component/productCard/ProductCard";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { sortByNew } from "../../common";
-import { rootPath } from "../../config";
+import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { useQuery } from "@tanstack/react-query";
 
@@ -31,7 +31,7 @@ const Shop = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["items"],
     queryFn: () => {
-      return fetch("http://52.78.179.19:8080/items").then((res) => res.json());
+      return fetch(`${SERVER_PATH}items`).then((res) => res.json());
     },
   });
 
@@ -108,14 +108,14 @@ const Shop = () => {
         </div>
         <div className={styles.pagination}>
           <Link
-            to={currentPage === 1 ? `${rootPath}shop/1` : `${rootPath}shop/${(currentPage - 1).toString()}`}
+            to={currentPage === 1 ? `${ROOT_PATH}shop/1` : `${ROOT_PATH}shop/${(currentPage - 1).toString()}`}
             onClick={() => (currentPage === 1 ? false : setCurrentPage(currentPage - 1))}
           >
             &lt;
           </Link>
           {separatedItems?.map((element: ItemModel, index: number) => (
             <Link
-              to={`${rootPath}shop/${(index + 1).toString()}`}
+              to={`${ROOT_PATH}shop/${(index + 1).toString()}`}
               className={currentPage === index + 1 ? styles.emphasis : ""}
               onClick={() => setCurrentPage(index + 1)}
               key={index}
@@ -124,7 +124,7 @@ const Shop = () => {
             </Link>
           ))}
           <Link
-            to={currentPage === separatedItems.length ? `${rootPath}shop/${separatedItems.length}` : `${rootPath}shop/${(currentPage + 1).toString()}`}
+            to={currentPage === separatedItems.length ? `${ROOT_PATH}shop/${separatedItems.length}` : `${ROOT_PATH}shop/${(currentPage + 1).toString()}`}
             onClick={() => (currentPage === separatedItems.length ? false : setCurrentPage(currentPage + 1))}
           >
             &gt;

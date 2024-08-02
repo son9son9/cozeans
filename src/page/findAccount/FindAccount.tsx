@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 
 const FindAccount = (props: any) => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const FindAccount = (props: any) => {
   useEffect(() => {
     if (loginSession) {
       alert("로그아웃 후 다시 접근해주세요.");
-      navigate(`${rootPath}login`);
+      navigate(`${ROOT_PATH}login`);
     }
   }, []);
 

@@ -1,4 +1,5 @@
 export type LoginSessionModel = {
-  id: string;
-  name: string;
+  userId: string;
+  userName: string;
+  expireTime?: string;
 };

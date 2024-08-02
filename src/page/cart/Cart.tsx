@@ -4,7 +4,7 @@ import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
 import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
-import { rootPath } from "../../config";
+import { ROOT_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../store";
@@ -18,7 +18,7 @@ const Cart = () => {
   const [myCart, setMyCart] = useState([]);
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.id || Boolean(item.user) === Boolean(loginSession?.id)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
   }, [cart]);
 
   const onCloseHandler = (i: number) => {
@@ -96,7 +96,7 @@ const Cart = () => {
       <div className={styles.checkout}>
         <div>SUM : {formatNumberToCurrency(sum)} KRW</div>
         <button>
-          <Link to={`${rootPath}checkout`}>CHECKOUT</Link>
+          <Link to={`${ROOT_PATH}checkout`}>CHECKOUT</Link>
         </button>
       </div>
     </div>
