@@ -3,7 +3,6 @@ import "../../App.css";
 import styles from "./Login.module.scss";
 import { useState, useEffect } from "react";
 import { ROOT_PATH, SERVER_PATH } from "../../config";
-import { AccountModel } from "../../models/AccountModel";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginSessionModel } from "../../models/LoginSessionModel";
 import { loginSessionActions } from "../../store/index";
@@ -31,10 +30,16 @@ const Login = () => {
         dispatch(loginSessionActions.login(data.sessionInfo));
         navigate(ROOT_PATH);
         // window.location.assign("/");
+      } else if (data.isInvalid) {
+        alert("계정 정보가 없습니다.");
       } else {
         alert("이미 로그인 되어있습니다.");
         navigate(ROOT_PATH);
       }
+    },
+    onError: (err: any) => {
+      console.log("Login Error: ", err);
+      alert("");
     },
   });
 

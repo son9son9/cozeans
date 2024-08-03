@@ -2,17 +2,39 @@ import { useEffect, useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../component/modal/Modal";
-import { ROOT_PATH } from "../../config";
+import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { useSelector } from "react-redux";
+import { LoginSessionModel } from "../../models/LoginSessionModel";
+import { useMutation } from "@tanstack/react-query";
 
 const SignUp = () => {
+  const loginSession: LoginSessionModel = useSelector((state: any) => state.loginSession.value);
   const navigate = useNavigate();
   const [idInput, setIdInput] = useState("");
   const [pwInput, setPwInput] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [pwCheckInput, setPwCheckInput] = useState("");
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const loginSession = useSelector((state: any) => state.loginSession.value);
+
+  const mutation = useMutation<Response, Error, { userName: string; userId: string; password: string }>({
+    mutationFn: async (req) => {
+      return await fetch(`${SERVER_PATH}signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req),
+      }).then((res) => res.json());
+    },
+    onSuccess: (data: any) => {
+      if (data.success) {
+        toggleCompleteModal();
+      } else {
+        alert("이미 존재하는 ID입니다.");
+      }
+    },
+    retry: false,
+  });
 
   useEffect(() => {
     if (Object.keys(loginSession).length !== 0) {
@@ -44,23 +66,8 @@ const SignUp = () => {
       return false;
     }
 
-    // 로컬스토리지 계정 정보 불러와서 JSON parsing
-    let accountDatabase: any = localStorage.getItem("cozeans-accounts");
-    accountDatabase && (accountDatabase = JSON.parse(accountDatabase));
-    // id 중복 검사
-    if (accountDatabase) {
-      for (let i = 0; i < accountDatabase.length; i++) {
-        if (accountDatabase[i].id === idInput) {
-          alert("이미 동일한 아이디의 회원이 존재합니다.");
-          return false;
-        }
-      }
-    }
-
-    // 계정 정보를 로컬스토리지에 추가
-    const accountArray = [...(accountDatabase || ""), { name: nameInput, id: idInput, password: pwInput }];
-    localStorage.setItem("cozeans-accounts", JSON.stringify(accountArray));
-    toggleCompleteModal();
+    // 서버에 계정 추가
+    mutation.mutate({ userName: nameInput, userId: idInput, password: pwInput });
   };
 
   const toggleCompleteModal = () => {
@@ -77,12 +84,12 @@ const SignUp = () => {
         <h2>SIGN UP</h2>
         <h3>Create account</h3>
         <label>
-          Name
-          <input type="text" onChange={(e) => setNameInput(e.currentTarget.value)} />
-        </label>
-        <label>
           ID
           <input type="text" onChange={(e) => setIdInput(e.currentTarget.value)} />
+        </label>
+        <label>
+          Name
+          <input type="text" onChange={(e) => setNameInput(e.currentTarget.value)} />
         </label>
         <label>
           Password
@@ -100,7 +107,7 @@ const SignUp = () => {
       </div>
       <Modal toggleModal={toggleCompleteModal} isOpen={isCompleteModalOpen}>
         <h2>Congraturation !</h2>
-        <p>You became our member !</p>
+        <p>You just became our member !</p>
         <br />
         <button onClick={completeModalButtonHandler}>GO TO LOGIN</button>
       </Modal>
