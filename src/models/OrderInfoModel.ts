@@ -1,8 +1,8 @@
 export type OrderInfoModel = {
-  orderId: string;
   amount: number;
   orderDate: number;
   status: string;
+  user: string;
   customerInfo: {
     name: string;
     addressZonecode: string;

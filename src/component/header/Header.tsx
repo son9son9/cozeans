@@ -30,14 +30,15 @@ const Header = () => {
 
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
-  }, [cart]);
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
+  }, [cart, myCart]);
 
   const logoutClickHandler = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
       logout.refetch().then((res) => {
         if (res.data.success) {
           dispatch(loginSessionActions.logout());
+          setMyCart([]);
           alert("로그아웃 되었습니다.");
         } else {
           alert("이미 로그아웃 상태입니다.");

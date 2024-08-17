@@ -10,7 +10,7 @@ import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { OrderInfoModel } from "../../models/OrderInfoModel";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
 // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
@@ -18,11 +18,10 @@ const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 const customerKey = "ub4-rdnIUIaHFUiLi0LL1";
 // const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
-const generateRandomString = () => window.btoa(Math.random().toString()).slice(0, 20);
-
 const Checkout = (props: any) => {
   const navigate = useNavigate();
   const loginSession = useSelector((state: any) => state.loginSession.value);
+  // const orderHistory = useSelector((state: any) => state.orderHistory.value);
   const [paymentWidget, setPaymentWidget]: any = useState(null);
   const paymentMethodsWidgetRef = useRef(null);
   const [price, setPrice] = useState(0);
@@ -34,9 +33,7 @@ const Checkout = (props: any) => {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   // 장바구니 데이터 불러오기
   const cart = useSelector((state: any) => state.cart.value);
-  const [myCart, setMyCart] = useState(
-    cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId))
-  );
+  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
   const [sum, setSum] = useState(0);
   // 배송정보 데이터
   const [customerInput, setCustomerInput] = useState({
@@ -57,10 +54,36 @@ const Checkout = (props: any) => {
     },
     enabled: false,
   });
+  const order = useQuery({
+    queryKey: ["order"],
+    queryFn: async () => {
+      return await fetch(`${SERVER_PATH}get-order?user-id=${loginSession.userId}`).then((res) => res.json());
+    },
+    enabled: false,
+  });
+  const mutation = useMutation<Response, Error, OrderInfoModel>({
+    mutationFn: async (req) => {
+      return await fetch(`${SERVER_PATH}record-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req),
+      }).then((res) => res.json());
+    },
+    onSuccess: (data: any) => {
+      if (data.success) {
+      } else {
+      }
+    },
+    onError: (err: any) => {
+      console.log("Order record Error: ", err);
+    },
+  });
 
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
   }, [cart]);
 
   // 비로그인 시 로그인 화면으로 보내기
@@ -151,31 +174,24 @@ const Checkout = (props: any) => {
       return false;
     }
 
-    // generate random string. it would be orderId
-    const orderId = generateRandomString();
-
-    // localStorage 이전 결제정보 불러오기
-    let orderHistory = localStorage.getItem("cozeans-order-info");
-    orderHistory = orderHistory && JSON.parse(orderHistory);
-    // localStorage에 결제정보 저장
+    // Order info 서버에 저장
     const orderInfo: OrderInfoModel = {
-      orderId: orderId,
+      user: loginSession.userId,
       customerInfo: customerInput,
       amount: price,
       orderDate: Date.now(),
       status: "pending",
     };
-    if (orderHistory) {
-      localStorage.setItem("cozeans-order-info", JSON.stringify([...orderHistory, orderInfo]));
-    } else {
-      localStorage.setItem("cozeans-order-info", JSON.stringify([orderInfo]));
-    }
+    await mutation.mutate(orderInfo);
+    await order.refetch().then((res) => {
+      console.log("order 불러옴", res.data);
+    });
+    return false;
 
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     try {
       await paymentWidget?.requestPayment({
-        orderId: orderId,
         orderName: `${myCart.length !== myCart[0].name}${myCart.length > 1 && ` 외 ${myCart.length - 1}건`}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,

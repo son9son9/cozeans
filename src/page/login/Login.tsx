@@ -39,7 +39,6 @@ const Login = () => {
     },
     onError: (err: any) => {
       console.log("Login Error: ", err);
-      alert("");
     },
   });
 

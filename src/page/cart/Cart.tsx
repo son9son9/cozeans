@@ -18,7 +18,7 @@ const Cart = () => {
   const [myCart, setMyCart] = useState([]);
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
   }, [cart]);
 
   const onCloseHandler = (i: number) => {
