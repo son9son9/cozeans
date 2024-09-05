@@ -31,7 +31,7 @@ const Header = () => {
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
     setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
-  }, [cart, myCart]);
+  }, [cart]);
 
   const logoutClickHandler = () => {
     if (confirm("로그아웃 하시겠습니까?")) {

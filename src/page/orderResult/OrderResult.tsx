@@ -4,10 +4,12 @@ import styles from "./OrderResult.module.scss";
 import { useState } from "react";
 import { useEffect } from "react";
 import { formatNumberToCurrency } from "../../common";
-import { ROOT_PATH } from "../../config";
+import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { Link } from "react-router-dom";
 import { ItemModel } from "../../models/ItemModel";
 import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { OrderInfoModel } from "../../models/OrderInfoModel";
 
 const OrderResult = (props: any) => {
   const loginSession = useSelector((state: any) => state.loginSession.value);
@@ -18,15 +20,26 @@ const OrderResult = (props: any) => {
   const amount = searchParams.get("amount");
   // 장바구니 데이터 불러오기
   const cart = useSelector((state: any) => state.cart.value);
-  const [myCart, setMyCart] = useState(
-    cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId))
-  );
-  let orderHistory: any = localStorage.getItem("cozeans-order-info");
-  orderHistory = orderHistory && JSON.parse(orderHistory);
-  const currentOrder = orderHistory && orderHistory[orderHistory.length - 1];
+  const [myCart, setMyCart] = useState(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
 
-  const orderDate = () => {
-    let date = new Date(currentOrder.orderDate);
+  const mutation = useMutation<Response, Error, OrderInfoModel>({
+    mutationFn: async (req) => {
+      return await fetch(`${SERVER_PATH}success-order`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req),
+      }).then((res) => res.json());
+    },
+    onSuccess: (data: any) => {},
+    onError: (err: any) => {
+      console.log("Order record Error: ", err);
+    },
+  });
+
+  const orderDate = (param: any) => {
+    let date = new Date(param);
     return `${date.getFullYear()}.${date.getMonth() + 1 > 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1).toString()}.${
       date.getDate() > 9 ? date.getDate() : "0" + date.getDate().toString()
     } ${date.getHours() > 9 ? date.getHours() : "0" + date.getHours().toString()}:${
@@ -36,22 +49,22 @@ const OrderResult = (props: any) => {
 
   // store의 cart 변경이 일어날 때마다 myCart 업데이트
   useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId || Boolean(item.user) === Boolean(loginSession?.userId)));
+    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
   }, [cart]);
 
+  // 서버에 로그인세션 정보 넘겨주고 결제(완료) 상태 업데이트.
   useEffect(() => {
-    let arr;
-    // orderHistory 결제 상태 업데이트
     if (props.isSucceed) {
-      if (orderHistory) {
-        orderHistory.pop();
-        arr = [...orderHistory, { ...currentOrder, status: "succeed" }];
-      } else {
-        arr = [currentOrder];
-      }
-      localStorage.setItem("cozeans-order-info", JSON.stringify(arr));
+      mutation.mutate(loginSession);
     }
   }, []);
+
+  // 결제 완료 시 장바구니 초기화
+  // useEffect(() => {
+  //   if (props.isSucceed) {
+  //     setMyCart([]);
+  //   }
+  // }, [mutation.isSuccess]);
 
   if (props.isSucceed) {
     return (
@@ -74,7 +87,7 @@ const OrderResult = (props: any) => {
             </div>
             <div className={styles["info-row"]}>
               <span>주문 일자</span>
-              <span>{orderDate()}</span>
+              <span>{mutation.data && orderDate(mutation.data.orderDate)}</span>
             </div>
             <div className={styles["info-row"]}>
               <span>주문 금액</span>

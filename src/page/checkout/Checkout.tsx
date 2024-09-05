@@ -21,7 +21,6 @@ const customerKey = "ub4-rdnIUIaHFUiLi0LL1";
 const Checkout = (props: any) => {
   const navigate = useNavigate();
   const loginSession = useSelector((state: any) => state.loginSession.value);
-  // const orderHistory = useSelector((state: any) => state.orderHistory.value);
   const [paymentWidget, setPaymentWidget]: any = useState(null);
   const paymentMethodsWidgetRef = useRef(null);
   const [price, setPrice] = useState(0);
@@ -71,11 +70,7 @@ const Checkout = (props: any) => {
         body: JSON.stringify(req),
       }).then((res) => res.json());
     },
-    onSuccess: (data: any) => {
-      if (data.success) {
-      } else {
-      }
-    },
+    onSuccess: (data: any) => {},
     onError: (err: any) => {
       console.log("Order record Error: ", err);
     },
@@ -183,15 +178,13 @@ const Checkout = (props: any) => {
       status: "pending",
     };
     await mutation.mutate(orderInfo);
-    await order.refetch().then((res) => {
-      console.log("order 불러옴", res.data);
-    });
-    return false;
+    while (mutation.isPending) {}
 
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     try {
       await paymentWidget?.requestPayment({
+        orderId: mutation.data.orderId,
         orderName: `${myCart.length !== myCart[0].name}${myCart.length > 1 && ` 외 ${myCart.length - 1}건`}`,
         customerName: customerInput.name,
         customerEmail: customerInput.email,
