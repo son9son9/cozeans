@@ -2,7 +2,7 @@ import "../../App.css";
 import styles from "./Checkout.module.scss";
 import { FormEvent, FormEventHandler, useEffect, useRef, useState } from "react";
 import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
-import Modal from "../../component/modal/Modal";
+import Modal from "../../components/modal/Modal";
 import DaumPostCode from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import { formatNumberToCurrency } from "../../common";

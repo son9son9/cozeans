@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../../App.css";
 import styles from "./Cart.module.scss";
 import { Link } from "react-router-dom";
-import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
+import PriceDisplayer from "../../components/priceDisplayer/PriceDisplayer";
 import { formatNumberToCurrency } from "../../common";
 import { ROOT_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";

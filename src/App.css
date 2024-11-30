@@ -23,7 +23,7 @@
 }
 
 /* HTML: <div class="loader"></div> */
-.loader {
+/* .loader {
   margin: 1rem auto;
   width: 40px;
   aspect-ratio: 1;
@@ -57,10 +57,31 @@
     background-position: 0 50%, 0 calc(0% - 2px), 0 calc(100% + 2px), 50% 50%, 50% calc(0% - 2px), 50% calc(100% + 2px), 100% 50%, 100% calc(0% - 2px),
       100% calc(100% + 2px);
   }
-}
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+
+.loader {
+  margin: 1rem auto;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #3c3633bb;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

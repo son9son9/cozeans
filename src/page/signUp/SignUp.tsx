@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
-import Modal from "../../component/modal/Modal";
+import Modal from "../../components/modal/Modal";
 import { ROOT_PATH, SERVER_PATH } from "../../config";
 import { useSelector } from "react-redux";
 import { LoginSessionModel } from "../../models/LoginSessionModel";

@@ -1,8 +1,8 @@
 import "./App.css";
 import { Suspense, useEffect } from "react";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-import Header from "./component/header/Header";
-import Footer from "./component/footer/Footer";
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
 import Home from "./page/home/Home";
 import Shop from "./page/shop/Shop";
 import Login from "./page/login/Login";

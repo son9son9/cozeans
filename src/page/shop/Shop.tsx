@@ -1,6 +1,6 @@
 import "../../App.css";
 import styles from "./Shop.module.scss";
-import ProductCard from "../../component/productCard/ProductCard";
+import ProductCard from "../../components/productCard/ProductCard";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { sortByNew } from "../../common";

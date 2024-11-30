@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../../App.css";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
-import PriceDisplayer from "../../component/priceDisplayer/PriceDisplayer";
+import PriceDisplayer from "../../components/priceDisplayer/PriceDisplayer";
 import { ROOT_PATH } from "../../config";
 import { ItemModel } from "../../models/ItemModel";
 import { useDispatch, useSelector } from "react-redux";
