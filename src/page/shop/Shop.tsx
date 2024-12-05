@@ -31,7 +31,15 @@ const Shop = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["items"],
     queryFn: () => {
-      return fetch(`${SERVER_PATH}items`).then((res) => res.json());
+      return fetch(`${SERVER_PATH}items`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
   });
 

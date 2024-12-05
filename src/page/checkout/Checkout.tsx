@@ -49,18 +49,34 @@ const Checkout = (props: any) => {
   const sessionQuery = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`).then((res) => res.json());
+      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
     enabled: false,
   });
   const order = useQuery({
     queryKey: ["order"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}get-order?user-id=${loginSession.userId}`).then((res) => res.json());
+      return await fetch(`${SERVER_PATH}get-order?user-id=${loginSession.userId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
     enabled: false,
   });
-  const mutation = useMutation<Response, Error, OrderInfoModel>({
+  const mutation = useMutation<Response & { orderId: string }, Error, OrderInfoModel>({
     mutationFn: async (req) => {
       return await fetch(`${SERVER_PATH}record-order`, {
         method: "POST",
@@ -70,7 +86,23 @@ const Checkout = (props: any) => {
         body: JSON.stringify(req),
       }).then((res) => res.json());
     },
-    onSuccess: (data: any) => {},
+    onSuccess: async (data: Response & { orderId: string }) => {
+      // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+      // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+      try {
+        await paymentWidget?.requestPayment({
+          orderId: data.orderId,
+          orderName: `${myCart.length !== myCart[0].name}${myCart.length > 1 && ` 외 ${myCart.length - 1}건`}`,
+          customerName: customerInput.name,
+          customerEmail: customerInput.email,
+          customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
+          successUrl: `${window.location.origin}${ROOT_PATH}order-success`,
+          failUrl: `${window.location.origin}${ROOT_PATH}order-fail`,
+        });
+      } catch (error) {
+        console.error("Error requesting payment:", error);
+      }
+    },
     onError: (err: any) => {
       console.log("Order record Error: ", err);
     },
@@ -178,23 +210,6 @@ const Checkout = (props: any) => {
       status: "pending",
     };
     await mutation.mutate(orderInfo);
-    while (mutation.isPending) {}
-
-    // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-    // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-    try {
-      await paymentWidget?.requestPayment({
-        orderId: mutation.data.orderId,
-        orderName: `${myCart.length !== myCart[0].name}${myCart.length > 1 && ` 외 ${myCart.length - 1}건`}`,
-        customerName: customerInput.name,
-        customerEmail: customerInput.email,
-        customerMobilePhone: `${customerInput.phoneFirstNumber + customerInput.phoneMiddleNumber + customerInput.phoneLastNumber}`,
-        successUrl: `${window.location.origin}${ROOT_PATH}order-success`,
-        failUrl: `${window.location.origin}${ROOT_PATH}order-fail`,
-      });
-    } catch (error) {
-      console.error("Error requesting payment:", error);
-    }
   };
 
   const toggleAddressModal = () => {

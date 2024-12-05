@@ -43,7 +43,15 @@ const Home = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["hypedItems"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}items`).then((res) => res.json());
+      return await fetch(`${SERVER_PATH}items`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
     select: (data: ItemModel[]) => sortByNew([...data].slice(0, 5)),
     retry: false,
@@ -52,7 +60,15 @@ const Home = () => {
   const sessionQuery = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`).then((res) => res.json());
+      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
     retry: false,
     enabled: false,

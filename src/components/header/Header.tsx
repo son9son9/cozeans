@@ -21,8 +21,16 @@ const Header = () => {
   const [myCart, setMyCart] = useState([]);
   const logout = useQuery({
     queryKey: ["logout"],
-    queryFn: () => {
-      return fetch(`${SERVER_PATH}logout?user-id=${loginSession.userId}`).then((res) => res.json());
+    queryFn: async () => {
+      return await fetch(`${SERVER_PATH}logout?user-id=${loginSession.userId}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // skip ngrok warning
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }).then((res) => res.json());
     },
     enabled: false,
     retry: false,
