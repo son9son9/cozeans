@@ -77,7 +77,9 @@ v2 (2024.09)
 #### AWS EC2
 
 [키페어 미생성 SSH 접속 제한](https://rigorous-wandflower-6ee.notion.site/SSH-131ceac030dc80c1ac8ef738b9038593)  
-[SSH 연결 종료 시 외부 서버가 종료되는 현상](https://rigorous-wandflower-6ee.notion.site/SSH-131ceac030dc8067983ac3d36cf8cf61)
+[SSH 연결 종료 시 외부 서버가 종료되는 현상](https://rigorous-wandflower-6ee.notion.site/SSH-131ceac030dc8067983ac3d36cf8cf61)  
+[Mixed Content 에러 해결 (ngrok)](https://www.notion.so/Mixed-Content-ngrok-13dceac030dc80fcb3d9f2d2fbdedec3)  
+[ngrok 백그라운드에서 실행하기](https://www.notion.so/ngrok-153ceac030dc80019b44c84d6b2e3dfb)
 
 ---
 
