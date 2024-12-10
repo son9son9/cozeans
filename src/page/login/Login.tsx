@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginSessionModel } from "../../models/LoginSessionModel";
 import { loginSessionActions } from "../../store/index";
 import { useMutation } from "@tanstack/react-query";
+import caution from "../../assets/caution.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -77,6 +78,17 @@ const Login = () => {
             <Link to={`${ROOT_PATH}sign-up`}>sign up</Link>
           </button>
         </div>
+      </div>
+      <div className={styles["test-guide-box"]}>
+        <div>
+          <img src={caution} alt="caution" width={24} />
+          테스트 계정 로그인 안내
+        </div>
+        <p>
+          ID : test
+          <br />
+          PW : 1111
+        </p>
       </div>
     </div>
   );
