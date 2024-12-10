@@ -34,6 +34,13 @@ const Details = () => {
       alert("사이즈를 선택해주세요.");
       return false;
     }
+    // 비로그인 확인창
+    if (Object.keys(loginSession).length === 0) {
+      if (confirm("현재 비로그인 상태입니다. 로그인하시겠습니까?")) {
+        navigate(`${ROOT_PATH}login`);
+        return false;
+      } else return false;
+    }
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
     myCart.length > 0 &&
@@ -63,14 +70,6 @@ const Details = () => {
     // CHECKOUT 클릭 시 장바구니에 물품 추가하고 cart 페이지로 바로 이동
     if (target === "CHECKOUT") {
       navigate(`${ROOT_PATH}cart`);
-    }
-
-    // 비로그인 확인창
-    if (!loginSession) {
-      if (confirm("현재 비로그인 상태입니다. 로그인하시겠습니까?")) {
-        navigate(`${ROOT_PATH}login`);
-        return;
-      }
     }
 
     // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
