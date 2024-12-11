@@ -46,10 +46,10 @@ const Checkout = (props: any) => {
     email: "",
     message: "",
   });
-  const sessionQuery = useQuery({
+  const sessionCheck = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`, {
+      return await fetch(`${SERVER_PATH}session-info?session-id=${loginSession.sessionId}`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -64,7 +64,7 @@ const Checkout = (props: any) => {
   const order = useQuery({
     queryKey: ["order"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}get-order?user-id=${loginSession.userId}`, {
+      return await fetch(`${SERVER_PATH}get-order?session-id=${loginSession.sessionId}`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -176,7 +176,7 @@ const Checkout = (props: any) => {
 
   const handlePaymentRequest = async () => {
     // login session 검사
-    if (!(await sessionQuery.refetch().then((res) => res.data.success))) {
+    if (!(await sessionCheck.refetch().then((res) => res.data.success))) {
       alert("로그인 세션이 유효하지 않습니다.");
       return false;
     }

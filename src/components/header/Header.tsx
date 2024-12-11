@@ -22,7 +22,7 @@ const Header = () => {
   const logout = useQuery({
     queryKey: ["logout"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}logout?user-id=${loginSession.userId}`, {
+      return await fetch(`${SERVER_PATH}logout?session-id=${loginSession.sessionId}`, {
         method: "GET",
         mode: "cors",
         headers: {

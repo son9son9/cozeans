@@ -57,10 +57,10 @@ const Home = () => {
     retry: false,
   });
 
-  const sessionQuery = useQuery({
+  const sessionCheck = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      return await fetch(`${SERVER_PATH}session-info?user-id=${loginSession.userId}`, {
+      return await fetch(`${SERVER_PATH}session-info?session-id=${loginSession.sessionId}`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -76,16 +76,18 @@ const Home = () => {
   // 메인 페이지에서 현재 로그인된 세션 체크,
   // 비로그인 상태 시 persist 상태 로그아웃으로 변경
   useEffect(() => {
-    setTimeout(() => {
-      sessionQuery.refetch().then((res) => {
-        if (res.data) {
-          if (res.data.success === false) {
-            dispatch(loginSessionActions.logout());
+    if (sessionCheck.data) {
+      setTimeout(() => {
+        sessionCheck.refetch().then((res) => {
+          if (res.data) {
+            if (res.data.success === false) {
+              dispatch(loginSessionActions.logout());
+            }
           }
-        }
-      });
-    }, 500);
-  }, [sessionQuery.data]);
+        });
+      }, 200);
+    }
+  }, [sessionCheck.data]);
 
   // 배너 무한 스크롤 텍스트 복제
   useEffect(() => {
