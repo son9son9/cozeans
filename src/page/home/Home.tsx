@@ -53,7 +53,7 @@ const Home = () => {
         },
       }).then((res) => res.json());
     },
-    select: (data: ItemModel[]) => sortByNew([...data].slice(0, 5)),
+    select: (data: ItemModel[]) => sortByNew([...data]).slice(0, 5),
     retry: false,
   });
 
