@@ -29,14 +29,14 @@ v1 (2024.06)
 - **SCSS + CSS Module** 을 활용하여 CSS 코드를 최적화하고 코드 가독성을 높였습니다.
 - Serverless 디자인으로 백엔드 서버 구축 없이 **JS의 내장 기능(localStorage, sessionStorage)** 만을 사용하여 로그인, 장바구니, 결제 등의 기능을 구현하였습니다.
 - 토스페이먼츠 결제 모듈을 삽입하여 테스트 결제 기능을 구현했습니다.
-- **GitHub Pages + GitHub Actions** 를 통해 배포하여 유지보수 시 자동 배포됩니다.
+- **GitHub Pages + GitHub Actions** 를 사용하여 유지보수 시 자동 배포됩니다.
 
 v2 (2024.09)  
 주요 변경점 : 내부 로직 변경 및 원격 서버 구축
 
 - **TypeScript**로 마이그레이션 했습니다.
-- **Tanstack Query(구 React Query)** 를 추가하여 서버 통신 로직을 구현했습니다.
-- **Redux Toolkit, Redux Pesist** 도입하여 상태 관리를 안정적으로 할 수 있도록 변경했습니다.
+- **Tanstack Query(구 React Query)** 를 추가하여 서버 데이터를 관리하록 변경했습니다.
+- **Redux Toolkit, Redux Pesist** 도입하여 상태 관리를 효율적으로 할 수 있도록 변경했습니다.
 - **AWS EC2 인스턴스**로 **Node.js(Express)** 서버를 구축하고, **MongoDB**로 DB를 관리합니다.
 
 ---
