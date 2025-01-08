@@ -4,6 +4,8 @@ import ProductCard from "../../components/productCard/ProductCard";
 import styles from "./Home.module.scss";
 import { useEffect } from "react";
 import { useRef } from "react";
+import banner1 from "../../assets/banner-img1.webp";
+import banner2 from "../../assets/banner-img2.webp";
 import sample1 from "../../assets/sample1.png";
 import sample2 from "../../assets/sample2.png";
 import sample3 from "../../assets/sample3.png";
@@ -126,15 +128,8 @@ const Home = () => {
       <div className={styles.bannerbox}>
         <div className={styles.banner}>
           <div className={styles["banner-img-wrapper"]}>
-            <img
-              src="https://www.calvinklein.co.kr/dw/image/v2/BGLQ_PRD/on/demandware.static/-/Library-Sites-calvin-klein-shared-library/default/dwe3041c88/Jungkook/Denim%20Page%20Update%20desktop.jpg"
-              className={`${circulateBannerFlag === 1 ? styles.hype : ""} animate-after-render`}
-            />
-            <img
-              src="https://sourcingjournal.com/wp-content/uploads/2023/03/lauraashleyluckybrandfeatured.jpg?w=910&h=511&crop=1"
-              className={circulateBannerFlag === 2 ? styles.hype : ""}
-            />
-
+            <img src={banner1} className={`${circulateBannerFlag === 1 ? styles.hype : ""} animate-after-render`} />
+            <img src={banner2} className={circulateBannerFlag === 2 ? styles.hype : ""} />
             <div className={styles.bannertext}>
               <h2>Brand new trends in Cozeans</h2>
               <p>Let&apos;s check it out !</p>
