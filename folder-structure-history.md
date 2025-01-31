@@ -1,0 +1,79 @@
+# 폴더 구조 변경 이력
+
+## 2024-02-15 ~ 2025-01-24
+
+```
+└── 📁src
+    └── 📁assets
+        └── banner-img1.webp
+        └── banner-img2.webp
+        └── caution.png
+        └── cozeans.svg
+        └── github.svg
+        └── menu.png
+        └── ringing.png
+        └── sample1.png
+        └── sample2.png
+        └── sample3.png
+        └── sample4.png
+        └── warning-sign.png
+    └── 📁components
+        └── 📁footer
+            └── Footer.module.scss
+            └── Footer.tsx
+        └── 📁header
+            └── Header.module.scss
+            └── Header.tsx
+        └── 📁modal
+            └── Modal.module.scss
+            └── Modal.tsx
+        └── 📁priceDisplayer
+            └── PriceDisplayer.module.scss
+            └── PriceDisplayer.tsx
+        └── 📁productCard
+            └── ProductCard.module.scss
+            └── ProductCard.tsx
+    └── 📁models
+        └── AccountModel.ts
+        └── ItemModel.ts
+        └── LoginSessionModel.ts
+        └── OrderInfoModel.ts
+    └── 📁page
+        └── 📁cart
+            └── Cart.module.scss
+            └── Cart.tsx
+        └── 📁checkout
+            └── Checkout.module.scss
+            └── Checkout.tsx
+        └── 📁details
+            └── Details.module.scss
+            └── Details.tsx
+        └── 📁findAccount
+            └── FindAccount.module.scss
+            └── FindAccount.tsx
+        └── 📁home
+            └── Home.module.scss
+            └── Home.tsx
+        └── 📁login
+            └── Login.module.scss
+            └── Login.tsx
+        └── 📁orderResult
+            └── OrderResult.module.scss
+            └── OrderResult.tsx
+        └── 📁shop
+            └── Shop.module.scss
+            └── Shop.tsx
+        └── 📁signUp
+            └── SignUp.module.scss
+            └── SignUp.tsx
+    └── 📁store
+        └── index.ts
+    └── App.css
+    └── App.tsx
+    └── common.tsx
+    └── config.ts
+    └── custom.d.ts
+    └── dataSample.ts
+    └── index.css
+    └── main.tsx
+```
