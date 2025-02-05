@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import ProductCard from "../../../shared/productCard/ProductCard";
 import styles from "./Home.module.scss";
 import { useEffect } from "react";
@@ -10,29 +10,25 @@ import sample2 from "../../../shared/assets/sample2.png";
 import sample3 from "../../../shared/assets/sample3.png";
 import sample4 from "../../../shared/assets/sample4.png";
 import { Link } from "react-router-dom";
-import { sortByNew } from "../../../common";
 import Modal from "../../../shared/modal/Modal";
 import ringing from "../../../shared/assets/ringing.png";
-import { ROOT_PATH, SERVER_PATH } from "../../../config";
-import { useSelector, useDispatch } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { ROOT_PATH } from "../../../config";
 import { ItemModel } from "../../../models/ItemModel";
-import { LoginSessionModel } from "../../../models/LoginSessionModel";
-import { loginSessionActions } from "../../../entities/session";
+import { useAuth } from "../../../features/auth";
+import { useHypedItemsQuery } from "../api/useHypedItemsQuery";
+import { bannerTextCalculator } from "../lib/bannerTextCalculator";
+
+const BANNER_TEXT = "SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300";
 
 export const Home = () => {
-  const loginSession: LoginSessionModel = useSelector((state: any) => state.loginSession.value);
-  const marqueeRef: any = useRef();
-  const [vpWidth, setVpWidth]: any = useState();
-  const [offsetWidth, setOffsetWidth] = useState();
-  const [numOfElement, setNumOfElement] = useState(0);
-  const [circulateBannerFlag, setCirculateBannerFlag] = useState(1);
-  const [beltText, setBeltText] = useState();
-  const items = useSelector((state: any) => state.items.value);
-  // useSelector로 받아온 데이터는 read only, 따라서 값 복사해서 변경해야 함.
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const [rotateBannerFlag, setRotateBannerFlag] = useState(1);
   const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
   const [newslettersEmail, setNewslettersEmail]: any = useState();
-  const dispatch = useDispatch();
+  const [bannerTextArray, setBannerTextArray] = useState([BANNER_TEXT]);
+  const { isPending, error, data } = useHypedItemsQuery();
+
+  useAuth();
 
   const toggleFollowModal = () => {
     if (!newslettersEmail) {
@@ -41,94 +37,27 @@ export const Home = () => {
     setIsFollowModalOpen(!isFollowModalOpen);
   };
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ["hypedItems"],
-    queryFn: async () => {
-      return await fetch(`${SERVER_PATH}items`, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          // skip ngrok warning
-          "ngrok-skip-browser-warning": "69420",
-        },
-      }).then((res) => res.json());
-    },
-    select: (data: ItemModel[]) => sortByNew([...data]).slice(0, 5),
-    retry: false,
-  });
-
-  const sessionCheck = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      return await fetch(`${SERVER_PATH}session-info?session-id=${loginSession.sessionId}`, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          // skip ngrok warning
-          "ngrok-skip-browser-warning": "69420",
-        },
-      }).then((res) => res.json());
-    },
-    retry: false,
-    enabled: false,
-  });
-  // 메인 페이지에서 현재 로그인된 세션 체크,
-  // 비로그인 상태 시 persist 상태 로그아웃으로 변경
-  useEffect(() => {
-    if (sessionCheck.data) {
-      setTimeout(() => {
-        sessionCheck.refetch().then((res) => {
-          if (res.data) {
-            if (res.data.success === false) {
-              dispatch(loginSessionActions.logout());
-            }
-          }
-        });
-      }, 200);
+  // 배너 문구 횟수 계산
+  useLayoutEffect(() => {
+    if (marqueeRef.current?.offsetWidth) {
+      setBannerTextArray(bannerTextCalculator(marqueeRef.current.offsetWidth, BANNER_TEXT));
     }
-  }, [sessionCheck.data]);
-
-  // 배너 무한 스크롤 텍스트 복제
-  useEffect(() => {
-    // 뷰포트, 전광판 텍스트 길이 구하기
-    setVpWidth(document.documentElement.clientWidth);
-    setOffsetWidth(marqueeRef.current.offsetWidth);
-
-    // 복제할 텍스트 개수 구하기
-    let count = 1;
-    let totalWidth: any = offsetWidth;
-
-    while (totalWidth < vpWidth + offsetWidth) {
-      totalWidth += offsetWidth;
-      count++;
-    }
-    setNumOfElement(count);
-
-    // 텍스트 복제
-    const numArray: any = Array.from({ length: numOfElement }, (_, i) => i + 1);
-    setBeltText(
-      numArray.map((i: any) => {
-        return <div key={i}>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>;
-      })
-    );
-  }, [vpWidth, offsetWidth, numOfElement]);
+  }, [marqueeRef]);
 
   // 10초마다 배너 전광판 이미지 교체
   useEffect(() => {
     setTimeout(() => {
-      setCirculateBannerFlag(circulateBannerFlag === 1 ? 2 : 1);
+      setRotateBannerFlag(rotateBannerFlag === 1 ? 2 : 1);
     }, 5000);
-  }, [circulateBannerFlag]);
+  }, [rotateBannerFlag]);
 
   return (
     <div className={`${styles.container} animate-after-render`}>
       <div className={styles.bannerbox}>
         <div className={styles.banner}>
           <div className={styles["banner-img-wrapper"]}>
-            <img src={banner1} className={`${circulateBannerFlag === 1 ? styles.hype : ""} animate-after-render`} />
-            <img src={banner2} className={circulateBannerFlag === 2 ? styles.hype : ""} />
+            <img src={banner1} className={`${rotateBannerFlag === 1 ? styles.hype : ""} animate-after-render`} />
+            <img src={banner2} className={rotateBannerFlag === 2 ? styles.hype : ""} />
             <div className={styles.bannertext}>
               <h2>Brand new trends in Cozeans</h2>
               <p>Let&apos;s check it out !</p>
@@ -140,8 +69,9 @@ export const Home = () => {
         </div>
         <div className={styles.belt}>
           <div className={styles.text + " montserrat-semibold"} ref={marqueeRef}>
-            {beltText}
-            <div>SITEWIDE SALE / SUMMER 2024 UP TO 30% OFF 100 BONUS POINTS ON PURCHASES OVER $300</div>
+            {bannerTextArray?.map((item, i) => (
+              <div key={i}>{item}</div>
+            ))}
           </div>
         </div>
       </div>

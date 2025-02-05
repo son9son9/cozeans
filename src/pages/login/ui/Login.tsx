@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ROOT_PATH } from "../../../config";
 import caution from "../../../shared/assets/caution.png";
 import { useLogin } from "../api/useLogin";
-import { useBackWhenLogin } from "../../../features/backWhenLogin/model/useBackWhenLogin";
+import { useBackWhenLogin } from "../../../features/backWhenLogin";
 
 export const Login = () => {
   const [idInput, setIdInput] = useState("");
