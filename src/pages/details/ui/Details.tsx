@@ -1,30 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Details.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import PriceDisplayer from "../../../shared/priceDisplayer/PriceDisplayer";
 import { ROOT_PATH } from "../../../config";
-import { ItemModel } from "../../../models/ItemModel";
-import { useDispatch, useSelector } from "react-redux";
-import { cartActions } from "../../../entities/cart";
+import { useSelector } from "react-redux";
+import { useCartActions } from "../../../entities/cart";
 
 export const Details = () => {
-  let isThereSameItemInCart = false;
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const loginSession = useSelector((state: any) => state.loginSession.value);
   const location = useLocation();
   const [selectedItemInfo, setSelectedItemInfo] = useState({ ...location.state.item, user: loginSession?.userId || "" });
-  // 장바구니 데이터 불러오기
-  const cart = useSelector((state: any) => state.cart.value);
-  const [myCart, setMyCart] = useState([]);
-  // store의 cart 변경이 일어날 때마다 myCart 업데이트
-  useEffect(() => {
-    setMyCart(cart.filter((item: ItemModel) => item.user === loginSession?.userId));
-  }, [cart]);
+  const { checkItemInCart, addToCart } = useCartActions();
 
-  // 장바구니 아이템 추가
-  const addToCartHandler = (target: any) => {
-    // 컬러와 사이즈 선택했는지 체크
+  // 컬러와 사이즈 선택했는지 체크
+  const validateSelection = (): boolean => {
     if (!selectedItemInfo.color) {
       alert("컬러를 선택해주세요.");
       return false;
@@ -33,29 +23,30 @@ export const Details = () => {
       alert("사이즈를 선택해주세요.");
       return false;
     }
-    // 비로그인 확인창
+    return true;
+  };
+
+  // 비로그인 상태 확인
+  const validateLogin = (): boolean => {
     if (Object.keys(loginSession).length === 0) {
       if (confirm("현재 비로그인 상태입니다. 로그인하시겠습니까?")) {
         navigate(`${ROOT_PATH}login`);
-        return false;
-      } else return false;
+      }
+      return false;
     }
+    return true;
+  };
+
+  // 장바구니 아이템 추가
+  const addToCartHandler = (target: any) => {
+    if (!validateSelection()) return;
+    if (!validateLogin()) return;
 
     // 기존의 카트에 같은 아이템이 있는지 확인 alert
-    myCart.length > 0 &&
-      myCart?.map((item: ItemModel) => {
-        // stringify()로 두 객체 비교
-        if (
-          item.id === selectedItemInfo.id &&
-          item.color === selectedItemInfo.color &&
-          item.size === selectedItemInfo.size &&
-          item.user === selectedItemInfo.user
-        )
-          isThereSameItemInCart = true;
-      });
+    const hasSameItemInCart = checkItemInCart(selectedItemInfo);
 
     // 장바구니에 동일 상품이 있을 때
-    if (isThereSameItemInCart) {
+    if (hasSameItemInCart) {
       if (target === "CHECKOUT") {
         // Checkout 클릭 시 장바구니에 추가하지 않고 카트 페이지로 이동
         navigate(`${ROOT_PATH}cart`);
@@ -71,15 +62,7 @@ export const Details = () => {
       navigate(`${ROOT_PATH}cart`);
     }
 
-    // 새로운 카트 데이터 추가 후 stringify하여 로컬스토리지 및 state 업데이트
-    // quantity 한개 추가
-    // user 키 추가
-    const newCartInfo = {
-      ...selectedItemInfo,
-      quantity: (selectedItemInfo.quantity ? Number(selectedItemInfo.quantity) : 0) + 1,
-      user: loginSession?.userId || "",
-    };
-    dispatch(cartActions.addItem(newCartInfo));
+    addToCart(selectedItemInfo);
   };
 
   const onCheckoutHandler = (e: any) => {
@@ -172,7 +155,7 @@ export const Details = () => {
           </select>
         </div>
         <div className={styles["button-box"]}>
-          <button onClick={addToCartHandler}>ADD TO CART</button>
+          <button onClick={(e) => addToCartHandler(e)}>ADD TO CART</button>
           <button
             onClick={(e) => {
               onCheckoutHandler(e);
