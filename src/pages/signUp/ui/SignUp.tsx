@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import styles from "./SignUp.module.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../../shared/modal/Modal";
-import { ROOT_PATH, SERVER_PATH } from "../../../config";
+import { ROOT_PATH } from "../../../config";
 import { useSelector } from "react-redux";
 import { LoginSessionModel } from "../../../models/LoginSessionModel";
-import { useMutation } from "@tanstack/react-query";
+import { IAccount } from "../model/account";
+import { useSignup } from "../model/useSignup";
 
 export const SignUp = () => {
   const loginSession: LoginSessionModel = useSelector((state: any) => state.loginSession.value);
@@ -14,27 +15,8 @@ export const SignUp = () => {
   const [pwInput, setPwInput] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [pwCheckInput, setPwCheckInput] = useState("");
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
-  const mutation = useMutation<Response, Error, { userName: string; userId: string; password: string }>({
-    mutationFn: async (req) => {
-      return await fetch(`${SERVER_PATH}signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
-      }).then((res) => res.json());
-    },
-    onSuccess: (data: any) => {
-      if (data.success) {
-        toggleCompleteModal();
-      } else {
-        alert("이미 존재하는 ID입니다.");
-      }
-    },
-    retry: false,
-  });
+  const { signup, modalState, setModalState } = useSignup();
 
   useEffect(() => {
     if (Object.keys(loginSession).length !== 0) {
@@ -67,11 +49,7 @@ export const SignUp = () => {
     }
 
     // 서버에 계정 추가
-    mutation.mutate({ userName: nameInput, userId: idInput, password: pwInput });
-  };
-
-  const toggleCompleteModal = () => {
-    setIsCompleteModalOpen(!isCompleteModalOpen);
+    signup.mutate({ userName: nameInput, userId: idInput, password: pwInput } as IAccount);
   };
 
   const completeModalButtonHandler = () => {
@@ -105,7 +83,7 @@ export const SignUp = () => {
           SIGN UP
         </button>
       </div>
-      <Modal toggleModal={toggleCompleteModal} isOpen={isCompleteModalOpen}>
+      <Modal toggleModal={setModalState} isOpen={modalState}>
         <h2>Congraturation !</h2>
         <p>You just became our member !</p>
         <br />
